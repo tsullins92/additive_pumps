@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/AsyncSerial.o \
+	${OBJECTDIR}/BufferedAsyncSerial.o \
 	${OBJECTDIR}/FrmMain.o \
 	${OBJECTDIR}/main.o
 
@@ -68,6 +69,11 @@ ${OBJECTDIR}/AsyncSerial.o: AsyncSerial.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AsyncSerial.o AsyncSerial.cpp
+
+${OBJECTDIR}/BufferedAsyncSerial.o: BufferedAsyncSerial.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BufferedAsyncSerial.o BufferedAsyncSerial.cpp
 
 ${OBJECTDIR}/FrmMain.o: FrmMain.cpp
 	${MKDIR} -p ${OBJECTDIR}

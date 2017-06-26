@@ -8,38 +8,39 @@
 #ifndef FRMMAIN_H_
 #define FRMMAIN_H_
 
-
+#include "BufferedAsyncSerial.h"
 #include <gtkmm.h>
 #include <iostream>
-#include <termios.h>
-#include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
 #include <string>
-#include <sigc++/sigc++.h>
+#include <gtkmm.h>
+using namespace std;
 
 class FrmMain : public Gtk::Window{
 protected:
-	Glib::RefPtr<Gtk::Builder> builder;
-	Gtk::Button *btnOk;
-	Gtk::Button *btnCancel;
-	Gtk::Label *labelSentStatus;
-        Gtk::Label *lblMass;
-        static std::string scaleReading;
-        static std::string prevScaleReading;
-
-public:
-	FrmMain(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade);//constructor
-        typedef sigc::signal<void> type_scale_read;
-        type_scale_read scale_read();
-
-
-protected:
-	//signal handlers
-	void on_ok_button_clicked();
+	Gtk::Button btnStart;
+	Gtk::Button btnCancel;
+	Gtk::Label lblRunStatus;
+        Gtk::Label lblMass;
+        Gtk::Entry entryVolume;
+        Gtk::Box vBox1;
+        Gtk::Box hBox1;
+        Gtk::Box hBox2;
+        Gtk::Box hBox3;
+        Gtk::Box hBox4;
+        
+        const int timeout_value;
+        sigc::connection conn;
+        bool connection;
+        //signal handlers
+	void on_start_button_clicked();
 	void on_cancel_button_clicked();
-        void FrmMain::on_scale_read()
-        static void received(const char *data, unsigned int len);
-        void start_serial_read(std::string dev,unsigned int baud);
+        bool start_serial_read(bool connection);
+        string control_active_pumps(string reading,string target);
+         
+public:
+	FrmMain();//constructor
+        virtual ~FrmMain();//destructor
 };
 
 #endif /* FRMMAIN_H_ */

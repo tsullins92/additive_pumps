@@ -5,17 +5,12 @@
 using namespace std;
 using namespace Gtk;
 
-int main(int argc, char **argv) {
-	cout << "Started" << endl;
+int main (int argc, char *argv[])
+{
+  auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
 
-	Main kit(argc,argv);
-	Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("gui.glade");
+  FrmMain FrmMain;
 
-	FrmMain *frm = 0;
-	builder->get_widget_derived("frmMain", frm);
-	kit.run(*frm);
-
-	cout << "End" << endl;
-
-	return 0;
+  //Shows the window and returns when it is closed.
+  return app->run(FrmMain);
 }
