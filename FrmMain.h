@@ -32,12 +32,20 @@ protected:
         const int timeout_value;
         sigc::connection conn;
         bool connection;
+        Glib::Dispatcher m_Dispatcher;
+        ScaleWorker m_Worker;
+        std::thread* m_WorkerThread;
+        
+        // Called from the worker thread.
+        void notify();
+        // Dispatcher handler.
+        void on_notification_from_worker_thread();
         //signal handlers
 	void on_start_button_clicked();
 	void on_cancel_button_clicked();
-        bool start_serial_read(bool connection);
-        string control_active_pumps(string reading,string target);
-         
+        
+        void update_start_stop_buttons();
+        
 public:
 	FrmMain();//constructor
         virtual ~FrmMain();//destructor

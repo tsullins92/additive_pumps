@@ -24,7 +24,7 @@ FrmMain::FrmMain()
         btnCancel("Cancel"),        //btnCancel displays "Cancel"
         lblRunStatus("Pumps Inactive"),        //labelSentStatus displays Satus of pumps
         lblMass("Not Reading"),     //lblMass displays mass from scale
-        timeout_value(1750), // 1500 ms = 1.5 seconds 
+        timeout_value(3000), // 1500 ms = 1.5 seconds 
         connection(false),              //variable controlling connection to scale
         vBox1(Gtk::ORIENTATION_VERTICAL),       
         hBox1(Gtk::ORIENTATION_HORIZONTAL),
@@ -55,6 +55,10 @@ FrmMain::FrmMain()
         btnStart.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_start_button_clicked));
 	btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_cancel_button_clicked));
         
+        // Connect the handler to the dispatcher.
+        m_Dispatcher.connect(sigc::mem_fun(*this, &ExampleWindow::on_notification_from_worker_thread));
+        update_start_stop_buttons();
+        
         show_all_children();  
 }
 
@@ -63,11 +67,17 @@ FrmMain::~FrmMain(){
 }
 //signal handlers
 void FrmMain::on_start_button_clicked(){
-	//labelSentStatus.set_text("Sent");
-    connection = true;
-    sigc::slot<bool> timeoutSlot = sigc::bind<bool>(sigc::mem_fun(*this, &FrmMain::start_serial_read),connection);
-    conn = Glib::signal_timeout().connect(timeoutSlot,timeout_value);
-    lblRunStatus.set_text("Pumps Running");
+    if (m_WorkerThread)
+    {
+        std::cout << "Can't start a worker thread while another one is running." << std::endl;
+     }
+    else
+    {
+        connection = true;
+        sigc::slot<bool> timeoutSlot = sigc::bind<bool>(sigc::mem_fun(*this, &FrmMain::start_serial_read),connection);
+        conn = Glib::signal_timeout().connect(timeoutSlot,timeout_value);
+        lblRunStatus.set_text("Pumps Running");
+    }
 }
 
 void FrmMain::on_cancel_button_clicked(){
@@ -78,47 +88,3 @@ void FrmMain::on_cancel_button_clicked(){
     lblRunStatus.set_text("Pumps Inactive");
 }
 
-bool FrmMain::start_serial_read(bool connection)
-{   BufferedAsyncSerial serial("/dev/ttyACM0",9600,boost::asio::serial_port_base::parity(
-                boost::asio::serial_port_base::parity::none),boost::asio::serial_port_base::character_size(8));
-    if (connection == true)
-    {
-        try 
-        {
-            sleep(1);
-            //boost::this_thread::sleep(boost::posix_time::seconds(2));
-            string scaleReading = serial.readStringUntil("\r");   
-            lblMass.set_text(scaleReading);
-            cout<<scaleReading<<endl;           
-            //serial.close();
-            return true;
-        }   
-        catch(boost::system::system_error& e)
-        {
-        cout<<"Error: "<<e.what()<<endl;
-        return true;
-        }
-    } 
-    else
-    {
-        return false;
-        serial.close();
-    }
-}
-
-string FrmMain::control_active_pumps(string reading, string target)
-{
-    stringstream ssin>>reading;
-    stringstream ssout;
-    double value;
-    double goal = str_to_double(target);
-    
-    for (char ch;ssin.get(ch);){ 
-        if(isdigit(ch)){
-            ssout>>ch;
-        }          
-    }
-    value = (double)ssout
-    if value
-    
-}
