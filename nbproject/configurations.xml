@@ -55,6 +55,7 @@
             <linkerOptionItem>`pkg-config --libs gtkmm-3.0`</linkerOptionItem>
             <linkerLibLibItem>boost_system</linkerLibLibItem>
             <linkerLibLibItem>boost_thread</linkerLibLibItem>
+            <linkerLibLibItem>pthread</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

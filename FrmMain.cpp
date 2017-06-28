@@ -8,6 +8,7 @@
 #include "FrmMain.h"
 #include "AsyncSerial.h"
 #include "BufferedAsyncSerial.h"
+#include "ScaleWorker.h"
 #include <iostream>
 #include <boost/thread.hpp>
 #include <string>
@@ -30,8 +31,10 @@ FrmMain::FrmMain()
         hBox1(Gtk::ORIENTATION_HORIZONTAL),
         hBox2(Gtk::ORIENTATION_HORIZONTAL),
         hBox3(Gtk::ORIENTATION_HORIZONTAL),
-        hBox4(Gtk::ORIENTATION_HORIZONTAL)
-         
+        hBox4(Gtk::ORIENTATION_HORIZONTAL),
+        m_Dispatcher(),
+        m_Worker(),
+        m_WorkerThread(nullptr)   
 {       
         //more initializing and packing elements into window
         set_title("Additives");
@@ -56,7 +59,7 @@ FrmMain::FrmMain()
 	btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_cancel_button_clicked));
         
         // Connect the handler to the dispatcher.
-        m_Dispatcher.connect(sigc::mem_fun(*this, &ExampleWindow::on_notification_from_worker_thread));
+        m_Dispatcher.connect(sigc::mem_fun(*this, &FrmMain::on_notification_from_worker_thread));
         update_start_stop_buttons();
         
         show_all_children();  
@@ -74,17 +77,88 @@ void FrmMain::on_start_button_clicked(){
     else
     {
         connection = true;
-        sigc::slot<bool> timeoutSlot = sigc::bind<bool>(sigc::mem_fun(*this, &FrmMain::start_serial_read),connection);
+        sigc::slot<bool> timeoutSlot = sigc::bind<bool>(sigc::mem_fun(*this, &FrmMain::start_scale_timeout),connection);
         conn = Glib::signal_timeout().connect(timeoutSlot,timeout_value);
         lblRunStatus.set_text("Pumps Running");
     }
 }
 
 void FrmMain::on_cancel_button_clicked(){
-	//labelSentStatus.set_text("");
+    if (!m_WorkerThread)
+  {
+    std::cout << "Can't stop a worker thread. None is running." << std::endl;
+  }
+  else
+  {
+   // Order the worker thread to stop.
     connection = false;
     conn.disconnect();
     lblMass.set_text("Not Reading");
     lblRunStatus.set_text("Pumps Inactive");
+    m_Worker.stop_work();
+    btnCancel.set_sensitive(false);
+  }
 }
 
+void FrmMain::update_start_stop_buttons()
+{
+  const bool thread_is_running = m_WorkerThread != nullptr;
+
+  btnStart.set_sensitive(!thread_is_running);
+  btnCancel.set_sensitive(thread_is_running);
+}
+
+void FrmMain::update_widgets()
+{
+  Glib::ustring scale_reading;
+  m_Worker.get_data(&scale_reading);
+
+  
+}
+
+bool FrmMain::start_scale_timeout(bool connection)
+{   
+    if (connection && !m_WorkerThread)
+    {        
+        try 
+        {   //serial connection to scale
+            m_WorkerThread = new std::thread(
+                [this]
+                {
+                  m_Worker.read_scale(this);
+                });
+                return true;
+        }   
+        catch(boost::system::system_error& e)
+        {
+        cout<<"Error: "<<e.what()<<endl;
+        return true;
+        }
+        
+    } 
+    else
+    {
+        return false;        
+    }  
+}
+
+void FrmMain::notify()
+{
+  m_Dispatcher.emit();
+}
+
+void FrmMain::on_notification_from_worker_thread()
+{
+  if (m_WorkerThread && m_Worker.has_stopped())
+  {
+    // Work is done.
+    connection = false;
+    conn.disconnect();
+    if (m_WorkerThread->joinable())
+      m_WorkerThread->join();
+    delete m_WorkerThread;
+    m_WorkerThread = nullptr;
+    update_start_stop_buttons();
+  }
+  update_widgets();
+}

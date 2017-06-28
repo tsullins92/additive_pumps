@@ -9,6 +9,7 @@
 #define FRMMAIN_H_
 
 #include "BufferedAsyncSerial.h"
+#include "ScaleWorker.h"
 #include <gtkmm.h>
 #include <iostream>
 #include <boost/thread.hpp>
@@ -36,18 +37,19 @@ protected:
         ScaleWorker m_Worker;
         std::thread* m_WorkerThread;
         
-        // Called from the worker thread.
-        void notify();
         // Dispatcher handler.
         void on_notification_from_worker_thread();
         //signal handlers
 	void on_start_button_clicked();
 	void on_cancel_button_clicked();
         
+        bool start_scale_timeout(bool connection);
         void update_start_stop_buttons();
-        
+        void update_widgets();
 public:
 	FrmMain();//constructor
+        // Called from the worker thread.
+        void notify();
         virtual ~FrmMain();//destructor
 };
 

@@ -1,6 +1,6 @@
 build/Debug/GNU-Linux/FrmMain.o: FrmMain.cpp FrmMain.h \
- BufferedAsyncSerial.h AsyncSerial.h /usr/include/gtkmm-3.0/gtkmm.h \
- /usr/include/glibmm-2.4/glibmm.h \
+ BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h \
+ /usr/include/gtkmm-3.0/gtkmm.h /usr/include/glibmm-2.4/glibmm.h \
  /usr/lib/x86_64-linux-gnu/glibmm-2.4/include/glibmmconfig.h \
  /usr/include/glibmm-2.4/glibmm/thread.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
@@ -1118,6 +1118,8 @@ FrmMain.h:
 BufferedAsyncSerial.h:
 
 AsyncSerial.h:
+
+ScaleWorker.h:
 
 /usr/include/gtkmm-3.0/gtkmm.h:
 

@@ -56,7 +56,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs gtkmm-3.0` -lboost_system -lboost_thread  
+LDLIBSOPTIONS=`pkg-config --libs gtkmm-3.0` -lboost_system -lboost_thread -lpthread  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}

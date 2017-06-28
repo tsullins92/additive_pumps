@@ -18,6 +18,7 @@
 #include <gtkmm.h>
 #include <thread>
 #include <mutex>
+#include<string>
 
 class FrmMain;
 
@@ -29,11 +30,12 @@ public:
   // Thread function.
   void do_work(FrmMain* caller);
 
-  void get_data(double* fraction_done, Glib::ustring* message) const;
+  void get_data(Glib::ustring* fraction_done) const;
   void stop_work();
   bool has_stopped() const;
-  bool start_serial_read(bool connection);
-  void control_active_pumps(string reading,string target);
+  bool read_scale(FrmMain* caller);
+  bool control_ard(FrmMain* caller);
+  void control_active_pumps(std::string reading,std::string target);
   
 private:
   // Synchronizes access to member data.
@@ -43,7 +45,7 @@ private:
   bool m_shall_stop;
   bool m_has_stopped;
   double m_fraction_done;
-  Glib::ustring m_message;
+  Glib::ustring m_scale_reading;
 };
 
 
