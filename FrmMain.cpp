@@ -77,8 +77,7 @@ void FrmMain::on_start_button_clicked(){
     else
     {
         connection = true;
-        sigc::slot<bool> timeoutSlot = sigc::bind<bool>(sigc::mem_fun(*this, &FrmMain::start_scale_timeout),connection);
-        conn = Glib::signal_timeout().connect(timeoutSlot,timeout_value);
+        start_scale_timeout(connection);
         lblRunStatus.set_text("Pumps Running");
     }
 }
@@ -112,8 +111,7 @@ void FrmMain::update_widgets()
 {
   Glib::ustring scale_reading;
   m_Worker.get_data(&scale_reading);
-
-  
+  lblMass.set_text(scale_reading); 
 }
 
 bool FrmMain::start_scale_timeout(bool connection)
@@ -149,16 +147,14 @@ void FrmMain::notify()
 
 void FrmMain::on_notification_from_worker_thread()
 {
-  if (m_WorkerThread && m_Worker.has_stopped())
-  {
-    // Work is done.
-    connection = false;
-    conn.disconnect();
-    if (m_WorkerThread->joinable())
-      m_WorkerThread->join();
-    delete m_WorkerThread;
-    m_WorkerThread = nullptr;
-    update_start_stop_buttons();
-  }
+//    if (m_WorkerThread && m_Worker.has_stopped())
+//  {
+//     //Work is done.
+//    if (m_WorkerThread->joinable())
+//        m_WorkerThread->join();
+//    delete m_WorkerThread;
+//    m_WorkerThread = nullptr;
+//    update_start_stop_buttons();
+//  }
   update_widgets();
 }

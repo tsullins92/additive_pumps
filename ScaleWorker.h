@@ -33,8 +33,8 @@ public:
   void get_data(Glib::ustring* fraction_done) const;
   void stop_work();
   bool has_stopped() const;
-  bool read_scale(FrmMain* caller);
-  bool control_ard(FrmMain* caller);
+  void read_scale(FrmMain* caller);
+  void control_ard();
   void control_active_pumps(std::string reading,std::string target);
   
 private:
