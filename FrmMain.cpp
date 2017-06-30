@@ -77,6 +77,8 @@ void FrmMain::on_start_button_clicked(){
     else
     {
         connection = true;
+        double target_volume = stod(entryVolume.get_text());
+        m_Worker.set_target_volume(&target_volume);
         start_scale_timeout(connection);
         lblRunStatus.set_text("Pumps Running");
     }

@@ -29,12 +29,12 @@ public:
 
   // Thread function.
   void do_work(FrmMain* caller);
-
   void get_data(Glib::ustring* fraction_done) const;
+  void set_target_volume(double* target_volume);
   void stop_work();
   bool has_stopped() const;
   void control_ard();
-  void control_active_pumps(std::string& reading,std::string target);
+  void control_active_pumps(std::string& reading,double target_volume);
   
 private:
   // Synchronizes access to member data.
@@ -44,6 +44,8 @@ private:
   bool m_shall_stop;
   bool m_has_stopped;
   double m_fraction_done;
+  double m_target_volume;
+  std::string m_pump_command;
   std::string m_scale_reading;
 };
 

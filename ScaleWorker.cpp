@@ -14,7 +14,9 @@ ScaleWorker::ScaleWorker() :
   m_Mutex(),
   m_shall_stop(false),
   m_has_stopped(false), 
-  m_scale_reading("0.0")
+  m_scale_reading("0.0"),
+  m_target_volume(0.0),
+  m_pump_command("")      
 {
 }
 
@@ -29,6 +31,13 @@ void ScaleWorker::get_data(Glib::ustring* scale_reading) const
     *scale_reading = m_scale_reading;
 }
 
+void ScaleWorker::set_target_volume(double* target_volume)
+{
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    if (target_volume)
+        m_target_volume = *target_volume;
+}
 
 void ScaleWorker::do_work(FrmMain* caller)
 {      
@@ -54,11 +63,10 @@ void ScaleWorker::do_work(FrmMain* caller)
             }
             cout<<"scaleReading = "<<scaleReading<<endl;  
             scaleSerial.close();
-            control_active_pumps(m_scale_reading,"60"); 
+            control_active_pumps(m_scale_reading,m_target_volume); 
             //serial connection to arduino
-            sleep(1);
-            string pumpReading = pumpSerial.readStringUntil("\r"); 
-            cout<<"pumpReading = "<<pumpReading<<endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            pumpSerial.writeString(m_pump_command);
             pumpSerial.close();
         }
         caller->notify();   
@@ -68,14 +76,14 @@ void ScaleWorker::do_work(FrmMain* caller)
 
 
 
-void ScaleWorker::control_active_pumps(string& reading, string target)
+void ScaleWorker::control_active_pumps(string& scale_reading, double target_volume)
 {
-    stringstream ssin {reading};
+    stringstream ssin {scale_reading};
     stringstream ssout {""};
     double value;
-    double goal = stod(target);
     
-    for (char ch;ssin.get(ch);){ 
+    for (char ch;ssin.get(ch);)
+    { 
         if((isdigit(ch))||ch=='.')
         {
             ssout<<ch;
@@ -83,14 +91,19 @@ void ScaleWorker::control_active_pumps(string& reading, string target)
         else if(ch=='\r')
         {
             break;
-        }
-        
+        }    
     }
-    cout << "ssout = " << ssout.str() << "\n";
+    
     value = stod(ssout.str());
-    reading = ssout.str();
+    if (value<target_volume)
+        m_pump_command = "high";
+    else
+        m_pump_command = "low";
+    
+    scale_reading = ssout.str();
+    cout << "ssout = " << ssout.str() << "\n";
     cout <<"value = " << value << "\n";
-    cout << "goal = " << goal << "\n";
+    cout << "target_volume = " << target_volume << "\n";
     return;
 }
 
