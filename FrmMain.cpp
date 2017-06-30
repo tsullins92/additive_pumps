@@ -38,21 +38,30 @@ FrmMain::FrmMain()
 {       
         //more initializing and packing elements into window
         set_title("Additives");
-        set_border_width(10);
-        hBox1.pack_start(lblMass, Gtk::PACK_SHRINK);    //pack mass reading into hBox1
-        vBox1.pack_start(hBox1, Gtk::PACK_SHRINK);      //pack hBox1    
-        hBox2.pack_start(lblRunStatus, Gtk::PACK_SHRINK); //pack run status into hBox2
-        vBox1.pack_start(hBox2, Gtk::PACK_SHRINK);      //pack hBox2
-        hBox3.pack_start(btnStart, Gtk::PACK_SHRINK);      //pack OK button into hBox3
-        hBox3.pack_start(btnCancel, Gtk::PACK_SHRINK);      //pack cancel button into hBox3
-        vBox1.pack_start(hBox3, Gtk::PACK_SHRINK);      //pack hbox3
+        //set_size_request(350,300);
+        set_border_width(0);
+        hBox1.pack_start(lblMass, Gtk::PACK_EXPAND_PADDING);    //pack mass reading into hBox1
+        vBox1.pack_start(hBox1, Gtk::PACK_EXPAND_PADDING);      //pack hBox1    
+        hBox2.pack_start(lblRunStatus, Gtk::PACK_EXPAND_PADDING); //pack run status into hBox2
+        vBox1.pack_start(hBox2, Gtk::PACK_EXPAND_PADDING);      //pack hBox2
+        hBox3.pack_start(btnStart, Gtk::PACK_EXPAND_PADDING);      //pack OK button into hBox3
+        hBox3.pack_start(btnCancel, Gtk::PACK_EXPAND_PADDING);      //pack cancel button into hBox3
+        vBox1.pack_start(hBox3, Gtk::PACK_EXPAND_PADDING);      //pack hbox3
         entryVolume.set_max_length(50);
-        entryVolume.set_text("hello");
-        entryVolume.set_text(entryVolume.get_text() + " world");
+        entryVolume.set_text("Enter Volume Here");
         entryVolume.select_region(0, entryVolume.get_text_length());
-        hBox4.pack_start(entryVolume, Gtk::PACK_SHRINK);
-        vBox1.pack_start(hBox4, Gtk::PACK_SHRINK);      //pack hbox4
+        hBox4.pack_start(entryVolume, Gtk::PACK_EXPAND_PADDING);
+        vBox1.pack_start(hBox4, Gtk::PACK_EXPAND_PADDING);      //pack hbox4
         add(vBox1);
+        
+//        m_refActionGroup = Gio::SimpleActionGroup::create();
+//
+//        m_refActionGroup->add_action("new", sigc::mem_fun(*this, &FrmMain::on_action_file_new));
+//        m_refActionGroup->add_action("open", sigc::mem_fun(*this, &FrmMain::on_action_file_open));
+//        m_refActionGroup->add_action("quit", sigc::mem_fun(*this, &FrmMain::on_action_file_quit));
+//
+//        insert_action_group("example", m_refActionGroup);
+
         
         //connect signals to handlers
         btnStart.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_start_button_clicked));
@@ -80,6 +89,7 @@ void FrmMain::on_start_button_clicked(){
         double target_volume = stod(entryVolume.get_text());
         m_Worker.set_target_volume(&target_volume);
         start_scale_timeout(connection);
+        update_start_stop_buttons();
         lblRunStatus.set_text("Pumps Running");
     }
 }

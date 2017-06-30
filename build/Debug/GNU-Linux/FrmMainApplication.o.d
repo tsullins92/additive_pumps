@@ -1,4 +1,5 @@
-build/Debug/GNU-Linux/main.o: main.cpp /usr/include/gtkmm-3.0/gtkmm.h \
+build/Debug/GNU-Linux/FrmMainApplication.o: FrmMainApplication.cpp \
+ FrmMainApplication.h /usr/include/gtkmm-3.0/gtkmm.h \
  /usr/include/glibmm-2.4/glibmm.h \
  /usr/lib/x86_64-linux-gnu/glibmm-2.4/include/glibmmconfig.h \
  /usr/include/glibmm-2.4/glibmm/thread.h /usr/include/glib-2.0/glib.h \
@@ -1111,7 +1112,9 @@ build/Debug/GNU-Linux/main.o: main.cpp /usr/include/gtkmm-3.0/gtkmm.h \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
  /usr/include/gtkmm-3.0/gtkmm/volumebutton.h FrmMain.h \
- BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h FrmMainApplication.h
+ BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h
+
+FrmMainApplication.h:
 
 /usr/include/gtkmm-3.0/gtkmm.h:
 
@@ -3438,5 +3441,3 @@ BufferedAsyncSerial.h:
 AsyncSerial.h:
 
 ScaleWorker.h:
-
-FrmMainApplication.h:

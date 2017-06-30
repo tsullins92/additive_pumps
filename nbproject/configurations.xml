@@ -7,6 +7,7 @@
       <itemPath>AsyncSerial.h</itemPath>
       <itemPath>BufferedAsyncSerial.h</itemPath>
       <itemPath>FrmMain.h</itemPath>
+      <itemPath>FrmMainApplication.h</itemPath>
       <itemPath>ScaleWorker.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -19,6 +20,7 @@
       <itemPath>AsyncSerial.cpp</itemPath>
       <itemPath>BufferedAsyncSerial.cpp</itemPath>
       <itemPath>FrmMain.cpp</itemPath>
+      <itemPath>FrmMainApplication.cpp</itemPath>
       <itemPath>ScaleWorker.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -71,6 +73,10 @@
       </item>
       <item path="FrmMain.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="FrmMainApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FrmMainApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ScaleWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ScaleWorker.h" ex="false" tool="3" flavor2="0">
@@ -109,6 +115,10 @@
       <item path="FrmMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="FrmMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FrmMainApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FrmMainApplication.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ScaleWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>

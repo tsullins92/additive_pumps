@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/AsyncSerial.o \
 	${OBJECTDIR}/BufferedAsyncSerial.o \
 	${OBJECTDIR}/FrmMain.o \
+	${OBJECTDIR}/FrmMainApplication.o \
 	${OBJECTDIR}/ScaleWorker.o \
 	${OBJECTDIR}/main.o
 
@@ -80,6 +81,11 @@ ${OBJECTDIR}/FrmMain.o: FrmMain.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FrmMain.o FrmMain.cpp
+
+${OBJECTDIR}/FrmMainApplication.o: FrmMainApplication.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FrmMainApplication.o FrmMainApplication.cpp
 
 ${OBJECTDIR}/ScaleWorker.o: ScaleWorker.cpp
 	${MKDIR} -p ${OBJECTDIR}

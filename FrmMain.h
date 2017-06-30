@@ -17,7 +17,7 @@
 #include <gtkmm.h>
 using namespace std;
 
-class FrmMain : public Gtk::Window{
+class FrmMain : public Gtk::ApplicationWindow{
 protected:
 	Gtk::Button btnStart;
 	Gtk::Button btnCancel;
@@ -29,6 +29,7 @@ protected:
         Gtk::Box hBox2;
         Gtk::Box hBox3;
         Gtk::Box hBox4;
+        //Glib::RefPtr<Gio::SimpleActionGroup> m_refActionGroup;
         
         const int timeout_value;
         sigc::connection conn;
