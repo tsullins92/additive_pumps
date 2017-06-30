@@ -33,6 +33,7 @@ private:
 
   void on_window_hide(Gtk::Window* window);
   void on_menu_file_new_generic();
+  void on_menu_edit_recipe();
   void on_menu_file_quit();
   void on_menu_help_about();
 

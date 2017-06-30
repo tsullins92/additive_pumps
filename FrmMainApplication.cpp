@@ -3,9 +3,9 @@
 #include <iostream>
 
 FrmMainApplication::FrmMainApplication()
-: Gtk::Application("org.gtkmm.example.main_menu")
+: Gtk::Application("Additive Pumps")
 {
-  Glib::set_application_name("Main Menu Example");
+  Glib::set_application_name("Additives");
 }
 
 Glib::RefPtr<FrmMainApplication> FrmMainApplication::create()
@@ -22,17 +22,15 @@ void FrmMainApplication::on_startup()
   //We can use add_action() because Gtk::Application derives from Gio::ActionMap.
 
   //File|New sub menu:
-  add_action("newstandard",
+  add_action("newrecipe",
     sigc::mem_fun(*this, &FrmMainApplication::on_menu_file_new_generic));
-
-  add_action("newfoo",
-    sigc::mem_fun(*this, &FrmMainApplication::on_menu_file_new_generic));
-
-  add_action("newgoo",
-    sigc::mem_fun(*this, &FrmMainApplication::on_menu_file_new_generic));
-
+  
   //File menu:
   add_action("quit", sigc::mem_fun(*this, &FrmMainApplication::on_menu_file_quit));
+
+  //Edit menu:
+  add_action("editrecipe",
+    sigc::mem_fun(*this, &FrmMainApplication::on_menu_edit_recipe));
 
   //Help menu:
   add_action("about", sigc::mem_fun(*this, &FrmMainApplication::on_menu_help_about));
@@ -43,22 +41,14 @@ void FrmMainApplication::on_startup()
   Glib::ustring ui_info =
     "<interface>"
     "  <!-- menubar -->"
-    "  <menu id='menu-example'>"
+    "  <menu id='menubar'>"
     "    <submenu>"
     "      <attribute name='label' translatable='yes'>_File</attribute>"
     "      <section>"
     "        <item>"
-    "          <attribute name='label' translatable='yes'>New _Standard</attribute>"
-    "          <attribute name='action'>app.newstandard</attribute>"
+    "          <attribute name='label' translatable='yes'>New _Recipe</attribute>"
+    "          <attribute name='action'>app.newrecipe</attribute>"
     "          <attribute name='accel'>&lt;Primary&gt;n</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>New _Foo</attribute>"
-    "          <attribute name='action'>app.newfoo</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>New _Goo</attribute>"
-    "          <attribute name='action'>app.newgoo</attribute>"
     "        </item>"
     "      </section>"
     "      <section>"
@@ -73,54 +63,9 @@ void FrmMainApplication::on_startup()
     "      <attribute name='label' translatable='yes'>_Edit</attribute>"
     "      <section>"
     "        <item>"
-    "          <attribute name='label' translatable='yes'>_Copy</attribute>"
-    "          <attribute name='action'>win.copy</attribute>"
+    "          <attribute name='label' translatable='yes'>_Edit _Recipe</attribute>"
+    "          <attribute name='action'>app.editrecipe</attribute>"
     "          <attribute name='accel'>&lt;Primary&gt;c</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>_Paste</attribute>"
-    "          <attribute name='action'>win.paste</attribute>"
-    "          <attribute name='accel'>&lt;Primary&gt;v</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>_Something</attribute>"
-    "          <attribute name='action'>win.something</attribute>"
-    "        </item>"
-    "      </section>"
-    "    </submenu>"
-    "    <submenu>"
-    "      <attribute name='label' translatable='yes'>_Choices</attribute>"
-    "      <section>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>Choice _A</attribute>"
-    "          <attribute name='action'>win.choice</attribute>"
-    "          <attribute name='target'>a</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>Choice _B</attribute>"
-    "          <attribute name='action'>win.choice</attribute>"
-    "          <attribute name='target'>b</attribute>"
-    "        </item>"
-    "      </section>"
-    "    </submenu>"
-    "    <submenu>"
-    "      <attribute name='label' translatable='yes'>_Other Choices</attribute>"
-    "      <section>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>Choice 1</attribute>"
-    "          <attribute name='action'>win.choiceother</attribute>"
-    "          <attribute name='target' type='i'>1</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>Choice 2</attribute>"
-    "          <attribute name='action'>win.choiceother</attribute>"
-    "          <attribute name='target' type='i'>2</attribute>"
-    "        </item>"
-    "      </section>"
-    "      <section>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>Some Toggle</attribute>"
-    "          <attribute name='action'>win.sometoggle</attribute>"
     "        </item>"
     "      </section>"
     "    </submenu>"
@@ -129,7 +74,7 @@ void FrmMainApplication::on_startup()
     "      <section>"
     "        <item>"
     "          <attribute name='label' translatable='yes'>_About</attribute>"
-    "          <attribute name='action'>win.about</attribute>"
+    "          <attribute name='action'>app.about</attribute>"
     "        </item>"
     "      </section>"
     "    </submenu>"
@@ -141,17 +86,9 @@ void FrmMainApplication::on_startup()
     "      <attribute name='label' translatable='yes'>_File</attribute>"
     "      <section>"
     "        <item>"
-    "          <attribute name='label' translatable='yes'>New _Standard</attribute>"
-    "          <attribute name='action'>app.newstandard</attribute>"
+    "          <attribute name='label' translatable='yes'>New _Recipe</attribute>"
+    "          <attribute name='action'>app.newrecipe</attribute>"
     "          <attribute name='accel'>&lt;Primary&gt;n</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>New _Foo</attribute>"
-    "          <attribute name='action'>app.newfoo</attribute>"
-    "        </item>"
-    "        <item>"
-    "          <attribute name='label' translatable='yes'>New _Goo</attribute>"
-    "          <attribute name='action'>app.newgoo</attribute>"
     "        </item>"
     "      </section>"
     "      <section>"
@@ -184,7 +121,7 @@ void FrmMainApplication::on_startup()
   }
 
   //Get the menubar and the app menu, and add them to the application:
-  auto object = m_refBuilder->get_object("menu-example");
+  auto object = m_refBuilder->get_object("menubar");
   auto gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
   object = m_refBuilder->get_object("appmenu");
   auto appMenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
@@ -232,10 +169,15 @@ void FrmMainApplication::on_menu_file_new_generic()
   std::cout << "A File|New menu item was selected." << std::endl;
 }
 
+void FrmMainApplication::on_menu_edit_recipe()
+{
+    return;
+}
+
 void FrmMainApplication::on_menu_file_quit()
 {
-  std::cout << G_STRFUNC << std::endl;
-  quit(); // Not really necessary, when Gtk::Widget::hide() is called.
+    std::cout << G_STRFUNC << std::endl;
+    quit(); // Not really necessary, when Gtk::Widget::hide() is called.
 
   // Gio::Application::quit() will make Gio::Application::run() return,
   // but it's a crude way of ending the program. The window is not removed
@@ -244,9 +186,12 @@ void FrmMainApplication::on_menu_file_quit()
   // counts in both of them. If we want the destructors to be called, we
   // must remove the window from the application. One way of doing this
   // is to hide the window.
-  std::vector<Gtk::Window*> windows = get_windows();
-  if (windows.size() > 0)
-    windows[0]->hide(); // In this simple case, we know there is only one window.
+    std::vector<Gtk::Window*> windows = get_windows();
+    if (windows.size() > 0)
+    {
+        for(int i=0;i<windows.size()-1;++i)
+              windows[i]->hide(); // Destroy each window
+    }
 }
 
 void FrmMainApplication::on_menu_help_about()
