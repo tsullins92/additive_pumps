@@ -123,7 +123,7 @@ bool FrmMain::start_scale_timeout(bool connection)
             m_WorkerThread = new std::thread(
                 [this]
                 {
-                  m_Worker.read_scale(this);
+                  m_Worker.do_work(this);
                 });
                 return true;
         }   

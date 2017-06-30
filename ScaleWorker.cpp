@@ -30,7 +30,7 @@ void ScaleWorker::get_data(Glib::ustring* scale_reading) const
 }
 
 
-void ScaleWorker::read_scale(FrmMain* caller)
+void ScaleWorker::do_work(FrmMain* caller)
 {      
     for(;;)
     {  
@@ -38,7 +38,14 @@ void ScaleWorker::read_scale(FrmMain* caller)
         //serial connection to scale
         BufferedAsyncSerial scaleSerial("/dev/ttyUSB0",9600);
         
+        //serial connection to arduino
+        BufferedAsyncSerial pumpSerial("/dev/ttyACM0",9600,boost::asio::serial_port_base::parity(
+                boost::asio::serial_port_base::parity::none),boost::asio::serial_port_base::character_size(8));
+        
+        //sleep to give time for serial to buffer and main thread to perform get_data()
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        
+        //lock the rest of the activity so that the main thread cannot interfere
         std::lock_guard<std::mutex> lock(m_Mutex);
         {
             string scaleReading = scaleSerial.readStringUntil("\r"); 
@@ -48,6 +55,11 @@ void ScaleWorker::read_scale(FrmMain* caller)
             cout<<"scaleReading = "<<scaleReading<<endl;  
             scaleSerial.close();
             control_active_pumps(m_scale_reading,"60"); 
+            //serial connection to arduino
+            sleep(1);
+            string pumpReading = pumpSerial.readStringUntil("\r"); 
+            cout<<"pumpReading = "<<pumpReading<<endl;
+            pumpSerial.close();
         }
         caller->notify();   
         //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -55,31 +67,8 @@ void ScaleWorker::read_scale(FrmMain* caller)
 }
 
 
- void ScaleWorker::control_ard()
-{
-    try
-    {
-        BufferedAsyncSerial pumpSerial("/dev/ttyACM0",9600,boost::asio::serial_port_base::parity(
-                boost::asio::serial_port_base::parity::none),boost::asio::serial_port_base::character_size(8));
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        string pumpReading = pumpSerial.readStringUntil("\r");
-        std::lock_guard<std::mutex> lock(m_Mutex);
-        {
-            cout<<"pumpReading = "<<pumpReading<<endl;
-        }
-        pumpSerial.close();
-        
-    }
 
-    catch(boost::system::system_error& e)
-    {
-        cout<<"Error: "<<e.what()<<endl;
-        
-    }
-}
-
-
-void ScaleWorker::control_active_pumps(string reading, string target)
+void ScaleWorker::control_active_pumps(string& reading, string target)
 {
     stringstream ssin {reading};
     stringstream ssout {""};
@@ -99,6 +88,7 @@ void ScaleWorker::control_active_pumps(string reading, string target)
     }
     cout << "ssout = " << ssout.str() << "\n";
     value = stod(ssout.str());
+    reading = ssout.str();
     cout <<"value = " << value << "\n";
     cout << "goal = " << goal << "\n";
     return;

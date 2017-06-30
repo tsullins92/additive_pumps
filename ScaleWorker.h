@@ -33,9 +33,8 @@ public:
   void get_data(Glib::ustring* fraction_done) const;
   void stop_work();
   bool has_stopped() const;
-  void read_scale(FrmMain* caller);
   void control_ard();
-  void control_active_pumps(std::string reading,std::string target);
+  void control_active_pumps(std::string& reading,std::string target);
   
 private:
   // Synchronizes access to member data.
@@ -45,7 +44,7 @@ private:
   bool m_shall_stop;
   bool m_has_stopped;
   double m_fraction_done;
-  Glib::ustring m_scale_reading;
+  std::string m_scale_reading;
 };
 
 
