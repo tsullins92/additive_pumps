@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>AsyncSerial.h</itemPath>
       <itemPath>BufferedAsyncSerial.h</itemPath>
+      <itemPath>EditRecipeDialog.h</itemPath>
       <itemPath>FrmMain.h</itemPath>
       <itemPath>FrmMainApplication.h</itemPath>
       <itemPath>ScaleWorker.h</itemPath>
@@ -19,6 +20,7 @@
                    projectFiles="true">
       <itemPath>AsyncSerial.cpp</itemPath>
       <itemPath>BufferedAsyncSerial.cpp</itemPath>
+      <itemPath>EditRecipeWindow.cpp</itemPath>
       <itemPath>FrmMain.cpp</itemPath>
       <itemPath>FrmMainApplication.cpp</itemPath>
       <itemPath>ScaleWorker.cpp</itemPath>
@@ -69,6 +71,10 @@
       </item>
       <item path="BufferedAsyncSerial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="EditRecipeDialog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EditRecipeWindow.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="FrmMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="FrmMain.h" ex="false" tool="3" flavor2="0">
@@ -111,6 +117,10 @@
       <item path="BufferedAsyncSerial.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BufferedAsyncSerial.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EditRecipeDialog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EditRecipeWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="FrmMain.cpp" ex="false" tool="1" flavor2="0">
       </item>

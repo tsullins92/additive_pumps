@@ -1,5 +1,5 @@
-build/Debug/GNU-Linux/FrmMainApplication.o: FrmMainApplication.cpp \
- FrmMainApplication.h /usr/include/gtkmm-3.0/gtkmm.h \
+build/Debug/GNU-Linux/EditRecipeDialog.o: EditRecipeDialog.cpp \
+ EditRecipeDialog.h /usr/include/gtkmm-3.0/gtkmm.h \
  /usr/include/glibmm-2.4/glibmm.h \
  /usr/lib/x86_64-linux-gnu/glibmm-2.4/include/glibmmconfig.h \
  /usr/include/glibmm-2.4/glibmm/thread.h /usr/include/glib-2.0/glib.h \
@@ -1111,10 +1111,9 @@ build/Debug/GNU-Linux/FrmMainApplication.o: FrmMainApplication.cpp \
  /usr/include/gtkmm-3.0/gtkmm/treestore.h \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
- /usr/include/gtkmm-3.0/gtkmm/volumebutton.h EditRecipeDialog.h FrmMain.h \
- BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h
+ /usr/include/gtkmm-3.0/gtkmm/volumebutton.h
 
-FrmMainApplication.h:
+EditRecipeDialog.h:
 
 /usr/include/gtkmm-3.0/gtkmm.h:
 
@@ -3433,13 +3432,3 @@ FrmMainApplication.h:
 /usr/include/gtkmm-3.0/gtkmm/viewport.h:
 
 /usr/include/gtkmm-3.0/gtkmm/volumebutton.h:
-
-EditRecipeDialog.h:
-
-FrmMain.h:
-
-BufferedAsyncSerial.h:
-
-AsyncSerial.h:
-
-ScaleWorker.h:

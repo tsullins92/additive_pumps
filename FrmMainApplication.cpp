@@ -1,6 +1,9 @@
 #include "FrmMainApplication.h"
+#include "EditRecipeWindow.h"
 #include "FrmMain.h"
 #include <iostream>
+#include <gtkmm.h>
+#include <gtkmm/dialog.h>
 
 FrmMainApplication::FrmMainApplication()
 : Gtk::Application("Additive Pumps")
@@ -171,6 +174,8 @@ void FrmMainApplication::on_menu_file_new_generic()
 
 void FrmMainApplication::on_menu_edit_recipe()
 {
+    EditRecipeWindow dialog();
+    //dialog.run();
     return;
 }
 

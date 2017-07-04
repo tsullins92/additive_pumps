@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/AsyncSerial.o \
 	${OBJECTDIR}/BufferedAsyncSerial.o \
+	${OBJECTDIR}/EditRecipeWindow.o \
 	${OBJECTDIR}/FrmMain.o \
 	${OBJECTDIR}/FrmMainApplication.o \
 	${OBJECTDIR}/ScaleWorker.o \
@@ -76,6 +77,11 @@ ${OBJECTDIR}/BufferedAsyncSerial.o: BufferedAsyncSerial.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/include/boost `pkg-config --cflags gtkmm-3.0` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BufferedAsyncSerial.o BufferedAsyncSerial.cpp
+
+${OBJECTDIR}/EditRecipeWindow.o: EditRecipeWindow.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/include/boost `pkg-config --cflags gtkmm-3.0` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EditRecipeWindow.o EditRecipeWindow.cpp
 
 ${OBJECTDIR}/FrmMain.o: FrmMain.cpp
 	${MKDIR} -p ${OBJECTDIR}

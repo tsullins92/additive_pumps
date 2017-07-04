@@ -1,32 +1,24 @@
 /*
- * FrmMain.cpp
- *
- *  Created on: Jun 17, 2017
- *      Author: tim
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-
-#include "FrmMain.h"
-#include "AsyncSerial.h"
-#include "BufferedAsyncSerial.h"
-#include "ScaleWorker.h"
-#include <iostream>
-#include <boost/thread.hpp>
-#include <string>
+#include "EditRecipeWindow.h"
 #include <gtkmm.h>
-#include <typeinfo>
-#include <boost/asio.hpp>
+
+
 using namespace std;
 using namespace Gtk;
 
 
-FrmMain::FrmMain()
+EditRecipeWindow::EditRecipeWindow()
       : //Initialize gui elements
-        btnStart("Start"),          //btnStart displays "Start"   
-        btnCancel("Cancel"),        //btnCancel displays "Cancel"
-        lblRunStatus("Pumps Inactive"),        //labelSentStatus displays Satus of pumps
-        lblMass("Not Reading"),     //lblMass displays mass from scale
-        timeout_value(3000), // 1500 ms = 1.5 seconds 
-        connection(false),              //variable controlling connection to scale
+        m_BtnSave("Save"),          //btnStart displays "Start"   
+        m_BtnCancel("Cancel"),        //btnCancel displays "Cancel"
+        m_LblPump1,
+        m_LblPump2,
+        m_EntryPump1,
+        m_EntryPump2,
         vBox1(Gtk::ORIENTATION_VERTICAL),       
         hBox1(Gtk::ORIENTATION_HORIZONTAL),
         hBox2(Gtk::ORIENTATION_HORIZONTAL),
@@ -56,30 +48,30 @@ FrmMain::FrmMain()
         
 //        m_refActionGroup = Gio::SimpleActionGroup::create();
 //
-//        m_refActionGroup->add_action("new", sigc::mem_fun(*this, &FrmMain::on_action_file_new));
-//        m_refActionGroup->add_action("open", sigc::mem_fun(*this, &FrmMain::on_action_file_open));
-//        m_refActionGroup->add_action("quit", sigc::mem_fun(*this, &FrmMain::on_action_file_quit));
+//        m_refActionGroup->add_action("new", sigc::mem_fun(*this, &EditRecipeWindow::on_action_file_new));
+//        m_refActionGroup->add_action("open", sigc::mem_fun(*this, &EditRecipeWindow::on_action_file_open));
+//        m_refActionGroup->add_action("quit", sigc::mem_fun(*this, &EditRecipeWindow::on_action_file_quit));
 //
 //        insert_action_group("example", m_refActionGroup);
 
         
         //connect signals to handlers
-        btnStart.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_start_button_clicked));
-	btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_cancel_button_clicked));
+        btnStart.signal_clicked().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_start_button_clicked));
+	btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_cancel_button_clicked));
         
         // Connect the handler to the dispatcher.
-        m_Dispatcher.connect(sigc::mem_fun(*this, &FrmMain::on_notification_from_worker_thread));
+        m_Dispatcher.connect(sigc::mem_fun(*this, &EditRecipeWindow::on_notification_from_worker_thread));
         update_start_stop_buttons();
         
         show_all_children();  
 }
 
-FrmMain::~FrmMain()
+EditRecipeWindow::~EditRecipeWindow()
 {
     
 }
 //signal handlers
-void FrmMain::on_start_button_clicked(){
+void EditRecipeWindow::on_start_button_clicked(){
     if (m_WorkerThread)
     {
         std::cout << "Can't start a worker thread while another one is running." << std::endl;
@@ -95,7 +87,7 @@ void FrmMain::on_start_button_clicked(){
     }
 }
 
-void FrmMain::on_cancel_button_clicked(){
+void EditRecipeWindow::on_cancel_button_clicked(){
     if (!m_WorkerThread)
   {
     std::cout << "Can't stop a worker thread. None is running." << std::endl;
@@ -112,7 +104,7 @@ void FrmMain::on_cancel_button_clicked(){
   }
 }
 
-void FrmMain::update_start_stop_buttons()
+void EditRecipeWindow::update_start_stop_buttons()
 {
   const bool thread_is_running = m_WorkerThread != nullptr;
 
@@ -120,14 +112,14 @@ void FrmMain::update_start_stop_buttons()
   btnCancel.set_sensitive(thread_is_running);
 }
 
-void FrmMain::update_widgets()
+void EditRecipeWindow::update_widgets()
 {
   Glib::ustring scale_reading;
   m_Worker.get_data(&scale_reading);
   lblMass.set_text(scale_reading); 
 }
 
-bool FrmMain::start_scale_timeout(bool connection)
+bool EditRecipeWindow::start_scale_timeout(bool connection)
 {   
     if (connection && !m_WorkerThread)
     {        
@@ -153,12 +145,12 @@ bool FrmMain::start_scale_timeout(bool connection)
     }  
 }
 
-void FrmMain::notify()
+void EditRecipeWindow::notify()
 {
   m_Dispatcher.emit();
 }
 
-void FrmMain::on_notification_from_worker_thread()
+void EditRecipeWindow::on_notification_from_worker_thread()
 {
 //    if (m_WorkerThread && m_Worker.has_stopped())
 //  {
