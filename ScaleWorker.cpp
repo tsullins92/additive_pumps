@@ -40,10 +40,14 @@ void ScaleWorker::set_target_volume(double* target_volume)
 }
 
 void ScaleWorker::do_work(FrmMain* caller)
-{      
+{    
+    {
+        std::lock_guard<std::mutex> lock(m_Mutex);
+        m_has_stopped = false;
+    }
     for(;;)
     {  
-       
+
         //serial connection to scale
         BufferedAsyncSerial scaleSerial("/dev/ttyUSB0",9600);
         
@@ -53,18 +57,30 @@ void ScaleWorker::do_work(FrmMain* caller)
         
         //sleep to give time for serial to buffer and main thread to perform get_data()
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        
-        //lock the rest of the activity so that the main thread cannot interfere
-        std::lock_guard<std::mutex> lock(m_Mutex);
+               
         {
+            //lock the rest of the activity so that the main thread cannot interfere
+            std::lock_guard<std::mutex> lock(m_Mutex);
+            if (m_shall_stop)
+            {
+                break;
+            }
             string scaleReading = scaleSerial.readStringUntil("\r"); 
             if(!scaleReading.empty()){
                 m_scale_reading = scaleReading;
             }
             cout<<"scaleReading = "<<scaleReading<<endl;  
             scaleSerial.close();
-            control_active_pumps(m_scale_reading,m_target_volume); 
-            //serial connection to arduino
+            try
+            {
+                control_active_pumps(m_scale_reading,m_target_volume); 
+            }
+            catch (const std::exception& e)
+            {
+                m_scale_reading = "0.0"; 
+                control_active_pumps(m_scale_reading,m_target_volume);         
+            }    
+                //serial connection to arduino
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             pumpSerial.writeString(m_pump_command);
             pumpSerial.close();
@@ -72,6 +88,12 @@ void ScaleWorker::do_work(FrmMain* caller)
         caller->notify();   
         //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
+    {
+    std::lock_guard<std::mutex> lock(m_Mutex);
+    m_shall_stop = false;
+    m_has_stopped = true;
+    }
+    caller->notify(); 
 }
 
 

@@ -6,7 +6,7 @@
                    projectFiles="true">
       <itemPath>AsyncSerial.h</itemPath>
       <itemPath>BufferedAsyncSerial.h</itemPath>
-      <itemPath>EditRecipeDialog.h</itemPath>
+      <itemPath>EditRecipeWindow.h</itemPath>
       <itemPath>FrmMain.h</itemPath>
       <itemPath>FrmMainApplication.h</itemPath>
       <itemPath>ScaleWorker.h</itemPath>
@@ -25,6 +25,18 @@
       <itemPath>FrmMainApplication.cpp</itemPath>
       <itemPath>ScaleWorker.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>gui.glade</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -71,9 +83,9 @@
       </item>
       <item path="BufferedAsyncSerial.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="EditRecipeDialog.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="EditRecipeWindow.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EditRecipeWindow.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="FrmMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -118,9 +130,9 @@
       </item>
       <item path="BufferedAsyncSerial.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="EditRecipeDialog.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="EditRecipeWindow.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EditRecipeWindow.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="FrmMain.cpp" ex="false" tool="1" flavor2="0">
       </item>

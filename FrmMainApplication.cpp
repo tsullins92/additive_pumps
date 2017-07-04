@@ -174,10 +174,17 @@ void FrmMainApplication::on_menu_file_new_generic()
 
 void FrmMainApplication::on_menu_edit_recipe()
 {
-    EditRecipeWindow dialog();
-    //dialog.run();
-    return;
-}
+  auto win = new EditRecipeWindow();
+
+  //Make sure that the application runs for as long this window is still open:
+  add_window(*win);
+
+  //Delete the window when it is hidden.
+  //That's enough for this simple example.
+  win->signal_hide().connect(sigc::bind<Gtk::Window*>(
+    sigc::mem_fun(*this, &FrmMainApplication::on_window_hide), win));
+
+  win->show_all();}
 
 void FrmMainApplication::on_menu_file_quit()
 {

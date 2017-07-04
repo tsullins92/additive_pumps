@@ -25,8 +25,7 @@ FrmMain::FrmMain()
         btnCancel("Cancel"),        //btnCancel displays "Cancel"
         lblRunStatus("Pumps Inactive"),        //labelSentStatus displays Satus of pumps
         lblMass("Not Reading"),     //lblMass displays mass from scale
-        timeout_value(3000), // 1500 ms = 1.5 seconds 
-        connection(false),              //variable controlling connection to scale
+        timeout_value(3000), // 1500 ms = 1.5 seconds
         vBox1(Gtk::ORIENTATION_VERTICAL),       
         hBox1(Gtk::ORIENTATION_HORIZONTAL),
         hBox2(Gtk::ORIENTATION_HORIZONTAL),
@@ -38,7 +37,7 @@ FrmMain::FrmMain()
 {       
         //more initializing and packing elements into window
         set_title("Additives");
-        //set_size_request(350,300);
+        set_size_request(350,300);
         set_border_width(0);
         hBox1.pack_start(lblMass, Gtk::PACK_EXPAND_PADDING);    //pack mass reading into hBox1
         vBox1.pack_start(hBox1, Gtk::PACK_EXPAND_PADDING);      //pack hBox1    
@@ -53,15 +52,6 @@ FrmMain::FrmMain()
         hBox4.pack_start(entryVolume, Gtk::PACK_EXPAND_PADDING);
         vBox1.pack_start(hBox4, Gtk::PACK_EXPAND_PADDING);      //pack hbox4
         add(vBox1);
-        
-//        m_refActionGroup = Gio::SimpleActionGroup::create();
-//
-//        m_refActionGroup->add_action("new", sigc::mem_fun(*this, &FrmMain::on_action_file_new));
-//        m_refActionGroup->add_action("open", sigc::mem_fun(*this, &FrmMain::on_action_file_open));
-//        m_refActionGroup->add_action("quit", sigc::mem_fun(*this, &FrmMain::on_action_file_quit));
-//
-//        insert_action_group("example", m_refActionGroup);
-
         
         //connect signals to handlers
         btnStart.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_start_button_clicked));
@@ -85,13 +75,23 @@ void FrmMain::on_start_button_clicked(){
         std::cout << "Can't start a worker thread while another one is running." << std::endl;
      }
     else
-    {
-        connection = true;
-        double target_volume = stod(entryVolume.get_text());
-        m_Worker.set_target_volume(&target_volume);
-        start_scale_timeout(connection);
-        update_start_stop_buttons();
-        lblRunStatus.set_text("Pumps Running");
+    {   
+        try
+        {           
+            double target_volume = stod(entryVolume.get_text());
+            m_Worker.set_target_volume(&target_volume);
+            start_scale_timeout();
+            update_start_stop_buttons();
+            lblRunStatus.set_text("Pumps Running");
+        }
+        catch(boost::system::system_error& e)
+        {
+            cout<<"Error: "<<e.what()<<endl;
+        }
+        catch(std::exception& e)
+        {
+            cout<<"Error: "<<e.what()<<endl;
+        }
     }
 }
 
@@ -103,11 +103,7 @@ void FrmMain::on_cancel_button_clicked(){
   else
   {
    // Order the worker thread to stop.
-    connection = false;
-    conn.disconnect();
-    lblMass.set_text("Not Reading");
-    lblRunStatus.set_text("Pumps Inactive");
-    m_Worker.stop_work();
+    m_Worker.stop_work();    
     btnCancel.set_sensitive(false);
   }
 }
@@ -127,25 +123,14 @@ void FrmMain::update_widgets()
   lblMass.set_text(scale_reading); 
 }
 
-bool FrmMain::start_scale_timeout(bool connection)
+bool FrmMain::start_scale_timeout()
 {   
-    if (connection && !m_WorkerThread)
+    if (!m_WorkerThread)
     {        
-        try 
-        {   //serial connection to scale
-            m_WorkerThread = new std::thread(
-                [this]
-                {
-                  m_Worker.do_work(this);
-                });
-                return true;
-        }   
-        catch(boost::system::system_error& e)
-        {
-        cout<<"Error: "<<e.what()<<endl;
-        return true;
-        }
-        
+
+        //serial connection to scale
+         m_WorkerThread = new std::thread([this]{m_Worker.do_work(this);});
+             return true;                   
     } 
     else
     {
@@ -160,14 +145,21 @@ void FrmMain::notify()
 
 void FrmMain::on_notification_from_worker_thread()
 {
-//    if (m_WorkerThread && m_Worker.has_stopped())
-//  {
-//     //Work is done.
-//    if (m_WorkerThread->joinable())
-//        m_WorkerThread->join();
-//    delete m_WorkerThread;
-//    m_WorkerThread = nullptr;
-//    update_start_stop_buttons();
-//  }
-  update_widgets();
+    if (m_WorkerThread && m_Worker.has_stopped())
+  {
+        //Work is done.
+       if (m_WorkerThread->joinable())
+           m_WorkerThread->join();
+        delete m_WorkerThread;
+        m_WorkerThread = nullptr;
+        connection = false;
+        lblMass.set_text("Not Reading");
+        lblRunStatus.set_text("Pumps Inactive");
+        update_start_stop_buttons();
+  }
+    else
+    {
+        update_widgets();
+    }
 }
+    

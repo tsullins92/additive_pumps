@@ -15,11 +15,11 @@
 #define EditRecipeWindow_H
 #include <gtkmm.h>
 
-class EditRecipeWindow : public Gtk::Dialog
+class EditRecipeWindow : public Gtk::Window
 {
    protected:
 	Gtk::Button m_BtnSave;
-	Gtk::Button m_btnCancel;
+	Gtk::Button m_BtnCancel;
 	Gtk::Label m_LblPump1;
         Gtk::Label m_LblPump2;
         Gtk::Entry m_EntryPump1;
@@ -27,7 +27,7 @@ class EditRecipeWindow : public Gtk::Dialog
         Gtk::Box m_VBox1;
         Gtk::Box m_HBox1;
         Gtk::Box m_HBox2;
-        //Gtk::Box hBox3;
+        Gtk::Box m_HBox3;
         //Gtk::Box hBox4;
                 
         
@@ -36,9 +36,7 @@ class EditRecipeWindow : public Gtk::Dialog
 	void on_cancel_button_clicked();
         
 public:
-	EditRecipeWindow();//constructor
-        // Called from the worker thread.
-        void notify();
+	EditRecipeWindow();//constructor       
         virtual ~EditRecipeWindow();//destructor
   
 };
