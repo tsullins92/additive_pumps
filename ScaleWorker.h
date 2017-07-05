@@ -34,7 +34,7 @@ public:
   void stop_work();
   bool has_stopped() const;
   void control_ard();
-  void control_active_pumps(std::string& reading,double target_volume);
+  void control_active_pumps(std::string past_reading, std::string& reading,double target_volume);
   
 private:
   // Synchronizes access to member data.
@@ -47,6 +47,7 @@ private:
   double m_target_volume;
   std::string m_pump_command;
   std::string m_scale_reading;
+  
 };
 
 

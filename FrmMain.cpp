@@ -24,8 +24,7 @@ FrmMain::FrmMain()
         btnStart("Start"),          //btnStart displays "Start"   
         btnCancel("Cancel"),        //btnCancel displays "Cancel"
         lblRunStatus("Pumps Inactive"),        //labelSentStatus displays Satus of pumps
-        lblMass("Not Reading"),     //lblMass displays mass from scale
-        timeout_value(3000), // 1500 ms = 1.5 seconds
+        lblMass("Not Reading"),     //lblMass displays mass from scale        
         vBox1(Gtk::ORIENTATION_VERTICAL),       
         hBox1(Gtk::ORIENTATION_HORIZONTAL),
         hBox2(Gtk::ORIENTATION_HORIZONTAL),
@@ -55,7 +54,7 @@ FrmMain::FrmMain()
         
         //connect signals to handlers
         btnStart.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_start_button_clicked));
-	btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_cancel_button_clicked));
+        btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_cancel_button_clicked));
         
         // Connect the handler to the dispatcher.
         m_Dispatcher.connect(sigc::mem_fun(*this, &FrmMain::on_notification_from_worker_thread));
@@ -91,7 +90,7 @@ void FrmMain::on_start_button_clicked(){
         catch(std::exception& e)
         {
             cout<<"Error: "<<e.what()<<endl;
-        }
+        }      
     }
 }
 
@@ -152,7 +151,6 @@ void FrmMain::on_notification_from_worker_thread()
            m_WorkerThread->join();
         delete m_WorkerThread;
         m_WorkerThread = nullptr;
-        connection = false;
         lblMass.set_text("Not Reading");
         lblRunStatus.set_text("Pumps Inactive");
         update_start_stop_buttons();

@@ -41,6 +41,7 @@ void ScaleWorker::set_target_volume(double* target_volume)
 
 void ScaleWorker::do_work(FrmMain* caller)
 {    
+    string past_reading = "0.0";
     {
         std::lock_guard<std::mutex> lock(m_Mutex);
         m_has_stopped = false;
@@ -56,35 +57,43 @@ void ScaleWorker::do_work(FrmMain* caller)
                 boost::asio::serial_port_base::parity::none),boost::asio::serial_port_base::character_size(8));
         
         //sleep to give time for serial to buffer and main thread to perform get_data()
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
                
         {
             //lock the rest of the activity so that the main thread cannot interfere
             std::lock_guard<std::mutex> lock(m_Mutex);
+            
             if (m_shall_stop)
             {
                 break;
             }
             string scaleReading = scaleSerial.readStringUntil("\r"); 
+            
             if(!scaleReading.empty()){
                 m_scale_reading = scaleReading;
             }
+            
             cout<<"scaleReading = "<<scaleReading<<endl;  
+            
             scaleSerial.close();
             try
+            {            
+                control_active_pumps(past_reading,m_scale_reading,m_target_volume); 
+            } 
+            catch(std::invalid_argument& e)
             {
-                control_active_pumps(m_scale_reading,m_target_volume); 
+                cout<<"Error: "<<e.what()<<endl;
             }
-            catch (const std::exception& e)
-            {
-                m_scale_reading = "0.0"; 
-                control_active_pumps(m_scale_reading,m_target_volume);         
-            }    
-                //serial connection to arduino
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            
+            past_reading = m_scale_reading;
+            
             pumpSerial.writeString(m_pump_command);
+            
             pumpSerial.close();
         }
+        
+        
         caller->notify();   
         //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
@@ -98,35 +107,48 @@ void ScaleWorker::do_work(FrmMain* caller)
 
 
 
-void ScaleWorker::control_active_pumps(string& scale_reading, double target_volume)
+void ScaleWorker::control_active_pumps(string past_reading,string& scale_reading, double target_volume)
 {
     stringstream ssin {scale_reading};
     stringstream ssout {""};
     double value;
+    bool valid_reading = false;
     
     for (char ch;ssin.get(ch);)
     { 
-        if((isdigit(ch))||ch=='.')
+        if(isdigit(ch))
         {
             ssout<<ch;
         }
+        else if(ch=='.')
+        {
+            ssout<<ch;
+            valid_reading = true;
+        }    
         else if(ch=='\r')
         {
             break;
         }    
     }
-    
-    value = stod(ssout.str());
-    if (value<target_volume)
-        m_pump_command = "high";
-    else
-        m_pump_command = "low";
-    
-    scale_reading = ssout.str();
-    cout << "ssout = " << ssout.str() << "\n";
-    cout <<"value = " << value << "\n";
-    cout << "target_volume = " << target_volume << "\n";
-    return;
+    if(valid_reading)
+    {
+        value = stod(ssout.str());
+        if (value<target_volume)
+            m_pump_command = "h";
+        else
+            m_pump_command = "l";
+
+        scale_reading = ssout.str();
+        cout << "ssout = " << ssout.str() << "\n";
+        cout <<"value = " << value << "\n";
+        cout << "target_volume = " << target_volume << "\n";
+        return;
+    }
+    else 
+    {
+        scale_reading = past_reading;
+        return;
+    }
 }
 
 void ScaleWorker::stop_work()

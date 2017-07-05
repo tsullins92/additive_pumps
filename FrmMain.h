@@ -31,9 +31,6 @@ protected:
         Gtk::Box hBox4;
         //Glib::RefPtr<Gio::SimpleActionGroup> m_refActionGroup;
         
-        const int timeout_value;
-        sigc::connection conn;
-        bool connection;
         Glib::Dispatcher m_Dispatcher;
         ScaleWorker m_Worker;
         std::thread* m_WorkerThread;
