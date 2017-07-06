@@ -49,17 +49,15 @@ void ScaleWorker::set_target_volume(double* target_volume)
 
 void ScaleWorker::do_work(FrmMain* caller)
 {    
+    //serial connection to scale
+    BufferedAsyncSerial scaleSerial("/dev/ttyUSB0",9600);
     string past_reading = "0.0";
     {
         std::lock_guard<std::mutex> lock(m_Mutex);
         m_has_stopped = false;
     }
     for(;;)
-    {  
-
-        //serial connection to scale
-        BufferedAsyncSerial scaleSerial("/dev/ttyUSB0",9600);
-        
+    {        
         //sleep to give time for serial to buffer and main thread to perform get_data()
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
                

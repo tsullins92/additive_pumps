@@ -14,7 +14,7 @@
 #ifndef ArduinoWorker_H
 #define ArduinoWorker_H
 
-
+#include "BufferedAsyncSerial.h"
 #include <gtkmm.h>
 #include <thread>
 #include <mutex>
@@ -36,7 +36,7 @@ public:
 private:
   // Synchronizes access to member data.
   mutable std::mutex m_Mutex;
-
+  
   // Data used by both GUI thread and worker thread.
   bool m_shall_stop;
   bool m_has_stopped;
