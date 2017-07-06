@@ -1111,7 +1111,8 @@ build/Debug/GNU-Linux/main.o: main.cpp /usr/include/gtkmm-3.0/gtkmm.h \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
  /usr/include/gtkmm-3.0/gtkmm/volumebutton.h FrmMain.h \
- BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h FrmMainApplication.h
+ BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h ArduinoWorker.h \
+ FrmMainApplication.h
 
 /usr/include/gtkmm-3.0/gtkmm.h:
 
@@ -3438,5 +3439,7 @@ BufferedAsyncSerial.h:
 AsyncSerial.h:
 
 ScaleWorker.h:
+
+ArduinoWorker.h:
 
 FrmMainApplication.h:

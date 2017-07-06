@@ -1112,7 +1112,7 @@ build/Debug/GNU-Linux/FrmMainApplication.o: FrmMainApplication.cpp \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
  /usr/include/gtkmm-3.0/gtkmm/volumebutton.h EditRecipeWindow.h FrmMain.h \
- BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h
+ BufferedAsyncSerial.h AsyncSerial.h ScaleWorker.h ArduinoWorker.h
 
 FrmMainApplication.h:
 
@@ -3443,3 +3443,5 @@ BufferedAsyncSerial.h:
 AsyncSerial.h:
 
 ScaleWorker.h:
+
+ArduinoWorker.h:

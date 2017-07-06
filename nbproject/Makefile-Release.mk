@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/ArduinoWorker.o \
 	${OBJECTDIR}/AsyncSerial.o \
 	${OBJECTDIR}/BufferedAsyncSerial.o \
 	${OBJECTDIR}/EditRecipeWindow.o \
@@ -67,6 +68,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/test: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/test ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/ArduinoWorker.o: ArduinoWorker.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ArduinoWorker.o ArduinoWorker.cpp
 
 ${OBJECTDIR}/AsyncSerial.o: AsyncSerial.cpp
 	${MKDIR} -p ${OBJECTDIR}

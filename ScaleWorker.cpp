@@ -31,6 +31,14 @@ void ScaleWorker::get_data(Glib::ustring* scale_reading) const
     *scale_reading = m_scale_reading;
 }
 
+void ScaleWorker::get_pump_data(string* pump_command) const
+{
+  std::lock_guard<std::mutex> lock(m_Mutex);
+
+  if (pump_command)
+    *pump_command = m_pump_command;
+}
+
 void ScaleWorker::set_target_volume(double* target_volume)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
@@ -51,10 +59,6 @@ void ScaleWorker::do_work(FrmMain* caller)
 
         //serial connection to scale
         BufferedAsyncSerial scaleSerial("/dev/ttyUSB0",9600);
-        
-        //serial connection to arduino
-        BufferedAsyncSerial pumpSerial("/dev/ttyACM0",9600,boost::asio::serial_port_base::parity(
-                boost::asio::serial_port_base::parity::none),boost::asio::serial_port_base::character_size(8));
         
         //sleep to give time for serial to buffer and main thread to perform get_data()
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -86,12 +90,8 @@ void ScaleWorker::do_work(FrmMain* caller)
             }
             //std::this_thread::sleep_for(std::chrono::milliseconds(500));
             
-            past_reading = m_scale_reading;
-            
-            pumpSerial.writeString(m_pump_command);
-            
-            pumpSerial.close();
-        }
+            past_reading = m_scale_reading;    
+            }
         
         
         caller->notify();   

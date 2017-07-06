@@ -31,8 +31,10 @@ FrmMain::FrmMain()
         hBox3(Gtk::ORIENTATION_HORIZONTAL),
         hBox4(Gtk::ORIENTATION_HORIZONTAL),
         m_Dispatcher(),
-        m_Worker(),
-        m_WorkerThread(nullptr)   
+        m_ScaleWorker(),
+        m_ScaleWorkerThread(nullptr),   
+        m_ArduinoWorker(),
+        m_ArduinoWorkerThread(nullptr)  
 {       
         //more initializing and packing elements into window
         set_title("Additives");
@@ -57,7 +59,7 @@ FrmMain::FrmMain()
         btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_cancel_button_clicked));
         
         // Connect the handler to the dispatcher.
-        m_Dispatcher.connect(sigc::mem_fun(*this, &FrmMain::on_notification_from_worker_thread));
+        m_Dispatcher.connect(sigc::mem_fun(*this, &FrmMain::on_notification_from_scale_worker_thread));
         update_start_stop_buttons();
         
         show_all_children();  
@@ -69,7 +71,7 @@ FrmMain::~FrmMain()
 }
 //signal handlers
 void FrmMain::on_start_button_clicked(){
-    if (m_WorkerThread)
+    if (m_ScaleWorkerThread||m_ArduinoWorkerThread)
     {
         std::cout << "Can't start a worker thread while another one is running." << std::endl;
      }
@@ -78,8 +80,9 @@ void FrmMain::on_start_button_clicked(){
         try
         {           
             double target_volume = stod(entryVolume.get_text());
-            m_Worker.set_target_volume(&target_volume);
+            m_ScaleWorker.set_target_volume(&target_volume);
             start_scale_timeout();
+            start_arduino_timeout();
             update_start_stop_buttons();
             lblRunStatus.set_text("Pumps Running");
         }
@@ -95,21 +98,31 @@ void FrmMain::on_start_button_clicked(){
 }
 
 void FrmMain::on_cancel_button_clicked(){
-    if (!m_WorkerThread)
+    if (!m_ScaleWorkerThread)
   {
     std::cout << "Can't stop a worker thread. None is running." << std::endl;
   }
   else
   {
    // Order the worker thread to stop.
-    m_Worker.stop_work();    
+    m_ScaleWorker.stop_work();    
+    btnCancel.set_sensitive(false);
+  }
+    if (!m_ArduinoWorkerThread)
+  {
+    std::cout << "Can't stop a worker thread. None is running." << std::endl;
+  }
+  else
+  {
+   // Order the worker thread to stop.
+    m_ArduinoWorker.stop_work();    
     btnCancel.set_sensitive(false);
   }
 }
 
 void FrmMain::update_start_stop_buttons()
 {
-  const bool thread_is_running = m_WorkerThread != nullptr;
+  const bool thread_is_running = m_ScaleWorkerThread != nullptr;
 
   btnStart.set_sensitive(!thread_is_running);
   btnCancel.set_sensitive(thread_is_running);
@@ -118,17 +131,39 @@ void FrmMain::update_start_stop_buttons()
 void FrmMain::update_widgets()
 {
   Glib::ustring scale_reading;
-  m_Worker.get_data(&scale_reading);
+  m_ScaleWorker.get_data(&scale_reading);
   lblMass.set_text(scale_reading); 
+}
+
+void FrmMain::update_arduino()
+{
+    string pump_command;
+    m_ScaleWorker.get_pump_data(&pump_command);
+    m_ArduinoWorker.set_data(&pump_command);
+}
+
+bool FrmMain::start_arduino_timeout()
+{
+    if (!m_ArduinoWorkerThread)
+    {        
+
+        //serial connection to arduino
+         m_ArduinoWorkerThread = new std::thread([this]{m_ArduinoWorker.do_work(this);});
+             return true;                   
+    } 
+    else
+    {
+        return false;        
+    }  
 }
 
 bool FrmMain::start_scale_timeout()
 {   
-    if (!m_WorkerThread)
+    if (!m_ScaleWorkerThread)
     {        
 
         //serial connection to scale
-         m_WorkerThread = new std::thread([this]{m_Worker.do_work(this);});
+         m_ScaleWorkerThread = new std::thread([this]{m_ScaleWorker.do_work(this);});
              return true;                   
     } 
     else
@@ -142,15 +177,15 @@ void FrmMain::notify()
   m_Dispatcher.emit();
 }
 
-void FrmMain::on_notification_from_worker_thread()
+void FrmMain::on_notification_from_scale_worker_thread()
 {
-    if (m_WorkerThread && m_Worker.has_stopped())
+    if (m_ScaleWorkerThread && m_ScaleWorker.has_stopped())
   {
         //Work is done.
-       if (m_WorkerThread->joinable())
-           m_WorkerThread->join();
-        delete m_WorkerThread;
-        m_WorkerThread = nullptr;
+        if (m_ScaleWorkerThread->joinable())
+           m_ScaleWorkerThread->join();
+        delete m_ScaleWorkerThread;
+        m_ScaleWorkerThread = nullptr;
         lblMass.set_text("Not Reading");
         lblRunStatus.set_text("Pumps Inactive");
         update_start_stop_buttons();
@@ -158,6 +193,14 @@ void FrmMain::on_notification_from_worker_thread()
     else
     {
         update_widgets();
+        update_arduino();
+    }
+    if (m_ArduinoWorkerThread && m_ArduinoWorker.has_stopped())
+    {
+        if (m_ArduinoWorkerThread->joinable())
+           m_ArduinoWorkerThread->join();
+        delete m_ArduinoWorkerThread;
+        m_ArduinoWorkerThread = nullptr;
     }
 }
     

@@ -10,6 +10,7 @@
 
 #include "BufferedAsyncSerial.h"
 #include "ScaleWorker.h"
+#include "ArduinoWorker.h"
 #include <gtkmm.h>
 #include <iostream>
 #include <boost/thread.hpp>
@@ -32,18 +33,22 @@ protected:
         //Glib::RefPtr<Gio::SimpleActionGroup> m_refActionGroup;
         
         Glib::Dispatcher m_Dispatcher;
-        ScaleWorker m_Worker;
-        std::thread* m_WorkerThread;
+        ScaleWorker m_ScaleWorker;
+        ArduinoWorker m_ArduinoWorker;
+        std::thread* m_ArduinoWorkerThread;
+        std::thread* m_ScaleWorkerThread;
         
         // Dispatcher handler.
-        void on_notification_from_worker_thread();
+        void on_notification_from_scale_worker_thread();
         //signal handlers
 	void on_start_button_clicked();
 	void on_cancel_button_clicked();
         
         bool start_scale_timeout();
+        bool start_arduino_timeout();
         void update_start_stop_buttons();
         void update_widgets();
+        void update_arduino();
 public:
 	FrmMain();//constructor
         // Called from the worker thread.

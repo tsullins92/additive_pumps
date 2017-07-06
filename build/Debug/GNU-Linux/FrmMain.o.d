@@ -1111,7 +1111,7 @@ build/Debug/GNU-Linux/FrmMain.o: FrmMain.cpp FrmMain.h \
  /usr/include/gtkmm-3.0/gtkmm/treestore.h \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
- /usr/include/gtkmm-3.0/gtkmm/volumebutton.h
+ /usr/include/gtkmm-3.0/gtkmm/volumebutton.h ArduinoWorker.h
 
 FrmMain.h:
 
@@ -3438,3 +3438,5 @@ ScaleWorker.h:
 /usr/include/gtkmm-3.0/gtkmm/viewport.h:
 
 /usr/include/gtkmm-3.0/gtkmm/volumebutton.h:
+
+ArduinoWorker.h:
