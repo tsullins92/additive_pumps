@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-#include "EditRecipeWindow.h"
+#include "NewRecipeWindow.h"
 #include <gtkmm.h>
 #include <iostream>
 
@@ -11,7 +11,7 @@ using namespace std;
 using namespace Gtk;
 
 
-EditRecipeWindow::EditRecipeWindow()
+NewRecipeWindow::NewRecipeWindow()
       : //Initialize gui elements
         m_BtnSave("Save"),          //m_BtnSave displays "Save"   
         m_BtnCancel("Cancel"),        //m_BtnCancel displays "Cancel"
@@ -88,18 +88,18 @@ EditRecipeWindow::EditRecipeWindow()
         add(m_VBox1);       
         
         //connect signals to handlers
-        m_BtnSave.signal_clicked().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_save_button_clicked));
-	m_BtnCancel.signal_clicked().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_cancel_button_clicked));
+        m_BtnSave.signal_clicked().connect(sigc::mem_fun(*this, &NewRecipeWindow::on_save_button_clicked));
+	m_BtnCancel.signal_clicked().connect(sigc::mem_fun(*this, &NewRecipeWindow::on_cancel_button_clicked));
         
         show_all_children();  
 }
 
-EditRecipeWindow::~EditRecipeWindow()
+NewRecipeWindow::~NewRecipeWindow()
 {
     
 }
 //signal handlers
-void EditRecipeWindow::on_save_button_clicked()
+void NewRecipeWindow::on_save_button_clicked()
 {
     
     
@@ -108,7 +108,7 @@ void EditRecipeWindow::on_save_button_clicked()
     
 }
 
-void EditRecipeWindow::on_cancel_button_clicked()
+void NewRecipeWindow::on_cancel_button_clicked()
 {
     cout << "Cancel" << std::endl;
   

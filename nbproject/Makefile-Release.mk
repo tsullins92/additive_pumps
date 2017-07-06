@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/EditRecipeWindow.o \
 	${OBJECTDIR}/FrmMain.o \
 	${OBJECTDIR}/FrmMainApplication.o \
+	${OBJECTDIR}/NewRecipeWindow.o \
 	${OBJECTDIR}/ScaleWorker.o \
 	${OBJECTDIR}/main.o
 
@@ -98,6 +99,11 @@ ${OBJECTDIR}/FrmMainApplication.o: FrmMainApplication.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FrmMainApplication.o FrmMainApplication.cpp
+
+${OBJECTDIR}/NewRecipeWindow.o: NewRecipeWindow.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/NewRecipeWindow.o NewRecipeWindow.cpp
 
 ${OBJECTDIR}/ScaleWorker.o: ScaleWorker.cpp
 	${MKDIR} -p ${OBJECTDIR}

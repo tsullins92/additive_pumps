@@ -5,17 +5,17 @@
  */
 
 /* 
- * File:   EditRecipeWindow.h
+ * File:   NewRecipeWindow.h
  * Author: tim
  *
- * Created on July 3, 2017, 6:58 PM
+ * Created on July 6, 2017, 2:43 PM
  */
 
-#ifndef EditRecipeWindow_H
-#define EditRecipeWindow_H
+#ifndef NEWRECIPEWINDOW_H
+#define NEWRECIPEWINDOW_H
 #include <gtkmm.h>
 
-class EditRecipeWindow : public Gtk::Window
+class NewRecipeWindow : public Gtk::Window
 {
    protected:
 	Gtk::Button m_BtnSave;
@@ -59,12 +59,12 @@ class EditRecipeWindow : public Gtk::Window
 	void on_cancel_button_clicked();
         
 public:
-	EditRecipeWindow();//constructor       
-        virtual ~EditRecipeWindow();//destructor
+	NewRecipeWindow();//constructor       
+        virtual ~NewRecipeWindow();//destructor
   
 };
 
 
 
-#endif /* EditRecipeWindow_H */
+#endif /* NEWRECIPEWINDOW_H */
 

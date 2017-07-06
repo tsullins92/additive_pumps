@@ -203,4 +203,3 @@ void FrmMain::on_notification_from_scale_worker_thread()
         m_ArduinoWorkerThread = nullptr;
     }
 }
-    

@@ -1,5 +1,6 @@
 #include "FrmMainApplication.h"
 #include "EditRecipeWindow.h"
+#include "NewRecipeWindow.h"
 #include "FrmMain.h"
 #include <iostream>
 #include <gtkmm.h>
@@ -26,7 +27,7 @@ void FrmMainApplication::on_startup()
 
   //File|New sub menu:
   add_action("newrecipe",
-    sigc::mem_fun(*this, &FrmMainApplication::on_menu_file_new_generic));
+    sigc::mem_fun(*this, &FrmMainApplication::on_menu_file_new_recipe));
   
   //File menu:
   add_action("quit", sigc::mem_fun(*this, &FrmMainApplication::on_menu_file_quit));
@@ -167,9 +168,19 @@ void FrmMainApplication::on_window_hide(Gtk::Window* window)
   delete window;
 }
 
-void FrmMainApplication::on_menu_file_new_generic()
+void FrmMainApplication::on_menu_file_new_recipe()
 {
-  std::cout << "A File|New menu item was selected." << std::endl;
+  auto win = new NewRecipeWindow();
+
+  //Make sure that the application runs for as long this window is still open:
+  add_window(*win);
+
+  //Delete the window when it is hidden.
+  //That's enough for this simple example.
+  win->signal_hide().connect(sigc::bind<Gtk::Window*>(
+    sigc::mem_fun(*this, &FrmMainApplication::on_window_hide), win));
+
+  win->show_all();
 }
 
 void FrmMainApplication::on_menu_edit_recipe()
