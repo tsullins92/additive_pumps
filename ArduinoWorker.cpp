@@ -44,7 +44,7 @@ void ArduinoWorker::do_work(FrmMain* caller)
 			printf("ERROR");
 		}
         //sleep to give time for serial to buffer and main thread to perform set_data()
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
                
         {
             //lock the rest of the activity so that the main thread cannot interfere
