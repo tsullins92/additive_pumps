@@ -31,14 +31,18 @@ void ArduinoWorker::set_data(string* pump_command)
 
 void ArduinoWorker::do_work(FrmMain* caller)
 {    
-    BufferedAsyncSerial m_ArduinoSerial("/dev/ttyACM0",9600,boost::asio::serial_port_base::parity(
-                boost::asio::serial_port_base::parity::none),boost::asio::serial_port_base::character_size(8)); 
+    char serialPortFilename[] = "/dev/ttyACM0";  
     {
         std::lock_guard<std::mutex> lock(m_Mutex);
         m_has_stopped = false;
     }
     for(;;)
-    {                 
+    {    
+        FILE *serPort = fopen(serialPortFilename, "w");
+        if (serPort == NULL)
+		{
+			printf("ERROR");
+		}
         //sleep to give time for serial to buffer and main thread to perform set_data()
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                
@@ -50,21 +54,17 @@ void ArduinoWorker::do_work(FrmMain* caller)
             {
                 break;           
             }
-                
-            m_ArduinoSerial.writeString(m_pump_command);
             
-            string arduinoReading = m_ArduinoSerial.readStringUntil("\r"); 
-            
-            cout<<"arduinoReading = "<<arduinoReading<<endl;  
-            
-            //arduinoSerial.close();
+            char msg[] = {m_pump_command[0]};
+            fwrite(msg, sizeof(char), sizeof(msg), serPort); 
+            cout<<"m_pump_command = "<<m_pump_command<<endl;  
+            fclose(serPort);
         }
     }
     {
     std::lock_guard<std::mutex> lock(m_Mutex);
     m_shall_stop = false;
     m_has_stopped = true;
-    m_ArduinoSerial.close();
     }
     caller->notify(); 
 }
