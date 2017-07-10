@@ -52,6 +52,8 @@ void ArduinoWorker::do_work(FrmMain* caller)
             
             if (m_shall_stop)
             {
+                char msg[] = {'h'};
+                fwrite(msg, sizeof(char), sizeof(msg), serPort); 
                 break;           
             }
             

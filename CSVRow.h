@@ -20,47 +20,50 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <map>
 
 class CSVRow
 {
     public:
-        std::string const& operator[](std::size_t index) const
-        {
-            return m_data[index];
-        }
+        
         std::size_t size() const
         {
-            return m_data.size();
+            return m_recipes_map.size();
         }
-        void readNextRow(std::istream& str)
+
+        
+        std::vector<std::string>& operator[](std::string key)
         {
-            std::string         line;
-            std::getline(str, line);
-
-            std::stringstream   lineStream(line);
-            std::string         cell;
-
-            m_data.clear();
-            while(std::getline(lineStream, cell, ','))
+            return m_recipes_map[key];
+        }
+        
+        void getRecipes()
+        {   
+        
+            std::string                 cell;
+            std::string                 line;
+            std::vector<std::string>    line_vector;
+            std::string                 recipes_key;
+            std::ifstream               input_file("recipes.csv");
+            std::stringstream           line_stream;
+            
+            while(std::getline(input_file, line, '\n'))
             {
-                m_data.push_back(cell);
-            }
-            // This checks for a trailing comma with no data after it.
-            if (!lineStream && cell.empty())
-            {
-                // If there was a trailing comma then add an empty element.
-                m_data.push_back("");
+                line_stream << line;
+                while(std::getline(line_stream, cell, ','))
+                {
+                    line_vector.push_back(cell);
+                }
+                recipes_key = line_vector[0];
+                line_vector.erase(line_vector.begin());
+                m_recipes_map[recipes_key] = line_vector;
             }
         }
+        
+        
     private:
-        std::vector<std::string>    m_data;
+        std::map<std::string,std::vector<std::string>>   m_recipes_map;
+        
 };
-
-std::istream& operator>>(std::istream& str, CSVRow& data)
-{
-    data.readNextRow(str);
-    return str;
-}   
-
 #endif /* CSVROW_H */
 
