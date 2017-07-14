@@ -1,5 +1,5 @@
-build/Debug/GNU-Linux/EditRecipeWindow.o: EditRecipeWindow.cpp \
- EditRecipeWindow.h /usr/include/gtkmm-3.0/gtkmm.h \
+build/Debug/GNU-Linux/FrmMainApplication.o: FrmMainApplication.cpp \
+ FrmMainApplication.h /usr/include/gtkmm-3.0/gtkmm.h \
  /usr/include/glibmm-2.4/glibmm.h \
  /usr/lib/x86_64-linux-gnu/glibmm-2.4/include/glibmmconfig.h \
  /usr/include/glibmm-2.4/glibmm/thread.h /usr/include/glib-2.0/glib.h \
@@ -1111,9 +1111,11 @@ build/Debug/GNU-Linux/EditRecipeWindow.o: EditRecipeWindow.cpp \
  /usr/include/gtkmm-3.0/gtkmm/treestore.h \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
- /usr/include/gtkmm-3.0/gtkmm/volumebutton.h CSVRow.h
+ /usr/include/gtkmm-3.0/gtkmm/volumebutton.h EditRecipeWindow.h CSVRow.h \
+ NewRecipeWindow.h FrmMain.h BufferedAsyncSerial.h AsyncSerial.h \
+ ScaleWorker.h ArduinoWorker.h
 
-EditRecipeWindow.h:
+FrmMainApplication.h:
 
 /usr/include/gtkmm-3.0/gtkmm.h:
 
@@ -3433,4 +3435,18 @@ EditRecipeWindow.h:
 
 /usr/include/gtkmm-3.0/gtkmm/volumebutton.h:
 
+EditRecipeWindow.h:
+
 CSVRow.h:
+
+NewRecipeWindow.h:
+
+FrmMain.h:
+
+BufferedAsyncSerial.h:
+
+AsyncSerial.h:
+
+ScaleWorker.h:
+
+ArduinoWorker.h:

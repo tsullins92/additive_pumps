@@ -11,15 +11,16 @@
  * Created on July 3, 2017, 6:58 PM
  */
 
-#ifndef EditRecipeWindow_H
-#define EditRecipeWindow_H
+#ifndef EDITRECIPEWINDOW_H
+#define EDITRECIPEWINDOW_H
 #include <gtkmm.h>
-
+#include "CSVRow.h"
 class EditRecipeWindow : public Gtk::Window
 {
    protected:
 	Gtk::Button m_BtnSave;
 	Gtk::Button m_BtnCancel;
+        Gtk::Label m_LblRecipe;
 	Gtk::Label m_LblPump1;
         Gtk::Label m_LblPump2;
         Gtk::Label m_LblPump3;
@@ -52,12 +53,14 @@ class EditRecipeWindow : public Gtk::Window
         Gtk::Box m_HBox8;
         Gtk::Box m_HBox9;
         Gtk::Box m_HBox10;       
-        Gtk::Box m_HBox11;        
+        Gtk::Box m_HBox11;      
+        Gtk::ComboBoxText m_Combo;
         
+        CSVRow m_CSVRow;
         //signal handlers
 	void on_save_button_clicked();
 	void on_cancel_button_clicked();
-        
+        void on_combo_changed();
 public:
 	EditRecipeWindow();//constructor       
         virtual ~EditRecipeWindow();//destructor

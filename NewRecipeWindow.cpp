@@ -95,7 +95,7 @@ NewRecipeWindow::NewRecipeWindow()
         
         //connect signals to handlers
         m_BtnSave.signal_clicked().connect(sigc::mem_fun(*this, &NewRecipeWindow::on_save_button_clicked));
-	m_BtnCancel.signal_clicked().connect(sigc::mem_fun(*this, &NewRecipeWindow::on_cancel_button_clicked));
+        m_BtnCancel.signal_clicked().connect(sigc::mem_fun(*this, &NewRecipeWindow::on_cancel_button_clicked));
         
         show_all_children();  
 }
@@ -112,7 +112,7 @@ void NewRecipeWindow::on_save_button_clicked()
     vector<string> recipe_info;
     bool recipe_is_new = true;
     m_CSVRow.getRecipes();
-    recipes = m_CSVRow.get_vector();
+    recipes = m_CSVRow.get_recipe_vector();
     for (int i=0;i<recipes.size();++i)
     {
         if (recipes[i]==new_recipe)

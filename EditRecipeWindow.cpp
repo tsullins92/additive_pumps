@@ -15,6 +15,7 @@ EditRecipeWindow::EditRecipeWindow()
       : //Initialize gui elements
         m_BtnSave("Save"),          //m_BtnSave displays "Save"   
         m_BtnCancel("Cancel"),        //m_BtnCancel displays "Cancel"
+        m_LblRecipe("Recipe: "),
         m_LblPump1("Pump 1: "),
         m_LblPump2("Pump 2: "),
         m_LblPump3("Pump 3: "),
@@ -25,7 +26,8 @@ EditRecipeWindow::EditRecipeWindow()
         m_LblPump8("Pump 8: "),
         m_LblPump9("Pump 9: "),
         m_LblPump10("Pump 10: "),
-        m_VBox1(Gtk::ORIENTATION_VERTICAL),       
+        m_VBox1(Gtk::ORIENTATION_VERTICAL),   
+        m_HBox0(Gtk::ORIENTATION_HORIZONTAL),
         m_HBox1(Gtk::ORIENTATION_HORIZONTAL),
         m_HBox2(Gtk::ORIENTATION_HORIZONTAL),
         m_HBox3(Gtk::ORIENTATION_HORIZONTAL),
@@ -41,16 +43,30 @@ EditRecipeWindow::EditRecipeWindow()
         set_title("Edit Recipes");
         //set_size_request(350,300);
         set_border_width(0);
-        m_EntryPump1.set_text("mL/L");
-        m_EntryPump2.set_text("mL/L");
-        m_EntryPump3.set_text("mL/L");
-        m_EntryPump4.set_text("mL/L");
-        m_EntryPump5.set_text("mL/L");
-        m_EntryPump6.set_text("mL/L");
-        m_EntryPump7.set_text("mL/L");
-        m_EntryPump8.set_text("mL/L");
-        m_EntryPump9.set_text("mL/L");
-        m_EntryPump10.set_text("mL/L");
+        //fill combo_box
+        vector<string> recipes;
+        vector<string> pump_values;
+        m_CSVRow.getRecipes();
+        recipes = m_CSVRow.get_recipe_vector();
+        for (int i=0;i<recipes.size();++i)
+        {
+            m_Combo.append(recipes[i]);
+        }
+        m_Combo.set_active(1);
+        pump_values = m_CSVRow.get_values_vector(1);
+        m_EntryPump1.set_text("0.0");
+        m_EntryPump2.set_text("0.0");
+        m_EntryPump3.set_text("0.0");
+        m_EntryPump4.set_text("0.0");
+        m_EntryPump5.set_text("0.0");
+        m_EntryPump6.set_text("0.0");
+        m_EntryPump7.set_text("0.0");
+        m_EntryPump8.set_text("0.0");
+        m_EntryPump9.set_text("0.0");
+        m_EntryPump10.set_text("0.0");
+        m_HBox0.pack_start(m_LblRecipe, Gtk::PACK_EXPAND_PADDING); 
+        m_HBox0.pack_start(m_Combo, Gtk::PACK_EXPAND_PADDING); 
+        m_VBox1.pack_start(m_HBox0, Gtk::PACK_EXPAND_PADDING);    
         m_HBox1.pack_start(m_LblPump1, Gtk::PACK_EXPAND_PADDING);    
         m_HBox1.pack_start(m_EntryPump1, Gtk::PACK_EXPAND_PADDING);    
         m_VBox1.pack_start(m_HBox1, Gtk::PACK_EXPAND_PADDING);    
@@ -89,8 +105,8 @@ EditRecipeWindow::EditRecipeWindow()
         
         //connect signals to handlers
         m_BtnSave.signal_clicked().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_save_button_clicked));
-	m_BtnCancel.signal_clicked().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_cancel_button_clicked));
-        
+        m_BtnCancel.signal_clicked().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_cancel_button_clicked));
+        m_Combo.signal_changed().connect(sigc::mem_fun(*this, &EditRecipeWindow::on_combo_changed) );
         show_all_children();  
 }
 
@@ -112,4 +128,11 @@ void EditRecipeWindow::on_cancel_button_clicked()
 {
     cout << "Cancel" << std::endl;
   
+}
+
+void EditRecipeWindow::on_combo_changed()
+{
+    Glib::ustring text = m_Combo.get_active_text();
+    if(!(text.empty()))
+        std::cout << "Combo changed: " << text << std::endl;
 }

@@ -28,11 +28,15 @@ std::size_t CSVRow::size() const
     return m_line_vector.size();
 }
         
-std::vector<std::string> CSVRow::get_vector()
+std::vector<std::string> CSVRow::get_recipe_vector()
 {
     return m_recipes_vector;
 }
-            
+
+std::vector<std::string CSVRow::get_values_vector(int recipes_index)
+{
+    return m_values_vector[recipes_index];
+}
 
 void CSVRow::readNextRow(std::istream& str)
 {
@@ -53,6 +57,7 @@ void CSVRow::readNextRow(std::istream& str)
         // If there was a trailing comma then add an empty element.
         m_line_vector.push_back("");
     }
+    
 }
 
 void CSVRow::getRecipes()
@@ -62,6 +67,10 @@ CSVRow              row;
     while(file >> row)
     {
         m_recipes_vector.push_back(row[0]);
+        vector<T>::const_iterator first = row.begin()+1;
+        vector<T>::const_iterator last = row.begin() + 10;
+        vector<T> newVec(first, last);
+        m_values_vector.push_back();
     }
 }
 
