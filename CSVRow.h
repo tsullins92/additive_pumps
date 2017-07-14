@@ -24,46 +24,17 @@
 
 class CSVRow
 {
-    public:
-        
-        std::size_t size() const
-        {
-            return m_recipes_map.size();
-        }
-
-        
-        std::vector<std::string>& operator[](std::string key)
-        {
-            return m_recipes_map[key];
-        }
-        
-        void getRecipes()
-        {   
-        
-            std::string                 cell;
-            std::string                 line;
-            std::vector<std::string>    line_vector;
-            std::string                 recipes_key;
-            std::ifstream               input_file("recipes.csv");
-            std::stringstream           line_stream;
-            
-            while(std::getline(input_file, line, '\n'))
-            {
-                line_stream << line;
-                while(std::getline(line_stream, cell, ','))
-                {
-                    line_vector.push_back(cell);
-                }
-                recipes_key = line_vector[0];
-                line_vector.erase(line_vector.begin());
-                m_recipes_map[recipes_key] = line_vector;
-            }
-        }
-        
-        
+    public:    
+    std::size_t size() const;
+    std::vector<std::string> get_vector();
+    std::string const& operator[](std::size_t index)const;       
+    void getRecipes();        
+    void write_recipe(std::vector<std::string> recipe_info);
+    void readNextRow(std::istream& str);  
+    
     private:
-        std::map<std::string,std::vector<std::string>>   m_recipes_map;
-        
-};
+       // std::map<std::string,std::vector<std::string> >   m_recipes_map;
+        std::vector<std::string> m_recipes_vector;
+        std::vector<std::string> m_line_vector;
+};  
 #endif /* CSVROW_H */
-

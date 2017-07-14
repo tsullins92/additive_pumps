@@ -1111,7 +1111,7 @@ build/Debug/GNU-Linux/NewRecipeWindow.o: NewRecipeWindow.cpp \
  /usr/include/gtkmm-3.0/gtkmm/treestore.h \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
- /usr/include/gtkmm-3.0/gtkmm/volumebutton.h
+ /usr/include/gtkmm-3.0/gtkmm/volumebutton.h CSVRow.h
 
 NewRecipeWindow.h:
 
@@ -3432,3 +3432,5 @@ NewRecipeWindow.h:
 /usr/include/gtkmm-3.0/gtkmm/viewport.h:
 
 /usr/include/gtkmm-3.0/gtkmm/volumebutton.h:
+
+CSVRow.h:

@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ArduinoWorker.o \
 	${OBJECTDIR}/AsyncSerial.o \
 	${OBJECTDIR}/BufferedAsyncSerial.o \
+	${OBJECTDIR}/CSVRow.o \
 	${OBJECTDIR}/EditRecipeWindow.o \
 	${OBJECTDIR}/FrmMain.o \
 	${OBJECTDIR}/FrmMainApplication.o \
@@ -84,6 +85,11 @@ ${OBJECTDIR}/BufferedAsyncSerial.o: BufferedAsyncSerial.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BufferedAsyncSerial.o BufferedAsyncSerial.cpp
+
+${OBJECTDIR}/CSVRow.o: CSVRow.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CSVRow.o CSVRow.cpp
 
 ${OBJECTDIR}/EditRecipeWindow.o: EditRecipeWindow.cpp
 	${MKDIR} -p ${OBJECTDIR}

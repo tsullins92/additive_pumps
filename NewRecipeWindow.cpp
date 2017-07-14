@@ -15,17 +15,19 @@ NewRecipeWindow::NewRecipeWindow()
       : //Initialize gui elements
         m_BtnSave("Save"),          //m_BtnSave displays "Save"   
         m_BtnCancel("Cancel"),        //m_BtnCancel displays "Cancel"
-        m_LblPump1("Pump 1: "),
-        m_LblPump2("Pump 2: "),
-        m_LblPump3("Pump 3: "),
-        m_LblPump4("Pump 4: "),
-        m_LblPump5("Pump 5: "),
-        m_LblPump6("Pump 6: "),
-        m_LblPump7("Pump 7: "),
-        m_LblPump8("Pump 8: "),
-        m_LblPump9("Pump 9: "),
-        m_LblPump10("Pump 10: "),
-        m_VBox1(Gtk::ORIENTATION_VERTICAL),       
+        m_LblRecipe("Recipe: "),
+        m_LblPump1("Pump 1 (mL/L): "),
+        m_LblPump2("Pump 2 (mL/L): "),
+        m_LblPump3("Pump 3 (mL/L): "),
+        m_LblPump4("Pump 4 (mL/L): "),
+        m_LblPump5("Pump 5 (mL/L): "),
+        m_LblPump6("Pump 6 (mL/L): "),
+        m_LblPump7("Pump 7 (mL/L): "),
+        m_LblPump8("Pump 8 (mL/L): "),
+        m_LblPump9("Pump 9 (mL/L): "),
+        m_LblPump10("Pump 10 (mL/L): "),
+        m_VBox1(Gtk::ORIENTATION_VERTICAL),
+        m_HBox0(Gtk::ORIENTATION_HORIZONTAL),
         m_HBox1(Gtk::ORIENTATION_HORIZONTAL),
         m_HBox2(Gtk::ORIENTATION_HORIZONTAL),
         m_HBox3(Gtk::ORIENTATION_HORIZONTAL),
@@ -38,19 +40,23 @@ NewRecipeWindow::NewRecipeWindow()
         m_HBox10(Gtk::ORIENTATION_HORIZONTAL)
 {       
         //more initializing and packing elements into window
-        set_title("Edit Recipes");
+        set_title("New Recipes");
         //set_size_request(350,300);
         set_border_width(0);
-        m_EntryPump1.set_text("mL/L");
-        m_EntryPump2.set_text("mL/L");
-        m_EntryPump3.set_text("mL/L");
-        m_EntryPump4.set_text("mL/L");
-        m_EntryPump5.set_text("mL/L");
-        m_EntryPump6.set_text("mL/L");
-        m_EntryPump7.set_text("mL/L");
-        m_EntryPump8.set_text("mL/L");
-        m_EntryPump9.set_text("mL/L");
-        m_EntryPump10.set_text("mL/L");
+        m_EntryRecipe.set_text("0000");
+        m_EntryPump1.set_text("0.0");
+        m_EntryPump2.set_text("0.0");
+        m_EntryPump3.set_text("0.0");
+        m_EntryPump4.set_text("0.0");
+        m_EntryPump5.set_text("0.0");
+        m_EntryPump6.set_text("0.0");
+        m_EntryPump7.set_text("0.0");
+        m_EntryPump8.set_text("0.0");
+        m_EntryPump9.set_text("0.0");
+        m_EntryPump10.set_text("0.0");
+        m_HBox0.pack_start(m_LblRecipe, Gtk::PACK_EXPAND_PADDING);    
+        m_HBox0.pack_start(m_EntryRecipe, Gtk::PACK_EXPAND_PADDING);    
+        m_VBox1.pack_start(m_HBox0, Gtk::PACK_EXPAND_PADDING);    
         m_HBox1.pack_start(m_LblPump1, Gtk::PACK_EXPAND_PADDING);    
         m_HBox1.pack_start(m_EntryPump1, Gtk::PACK_EXPAND_PADDING);    
         m_VBox1.pack_start(m_HBox1, Gtk::PACK_EXPAND_PADDING);    
@@ -101,6 +107,34 @@ NewRecipeWindow::~NewRecipeWindow()
 //signal handlers
 void NewRecipeWindow::on_save_button_clicked()
 {
+    string new_recipe = m_EntryRecipe.get_text();
+    vector<string> recipes;
+    vector<string> recipe_info;
+    bool recipe_is_new = true;
+    m_CSVRow.getRecipes();
+    recipes = m_CSVRow.get_vector();
+    for (int i=0;i<recipes.size();++i)
+    {
+        if (recipes[i]==new_recipe)
+        {
+            recipe_is_new = false;
+        }
+    }
+    if (recipe_is_new==true)
+    {
+        recipe_info.push_back(m_EntryRecipe.get_text());
+        recipe_info.push_back(m_EntryPump1.get_text());
+        recipe_info.push_back(m_EntryPump2.get_text());
+        recipe_info.push_back(m_EntryPump3.get_text());
+        recipe_info.push_back(m_EntryPump4.get_text());
+        recipe_info.push_back(m_EntryPump5.get_text());
+        recipe_info.push_back(m_EntryPump6.get_text());
+        recipe_info.push_back(m_EntryPump7.get_text());
+        recipe_info.push_back(m_EntryPump8.get_text());
+        recipe_info.push_back(m_EntryPump9.get_text());
+        recipe_info.push_back(m_EntryPump10.get_text());
+        m_CSVRow.write_recipe(recipe_info);
+    }
     
     
     cout << "Save" << std::endl;

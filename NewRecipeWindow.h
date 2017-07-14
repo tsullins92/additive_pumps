@@ -14,12 +14,14 @@
 #ifndef NEWRECIPEWINDOW_H
 #define NEWRECIPEWINDOW_H
 #include <gtkmm.h>
+#include "CSVRow.h"
 
 class NewRecipeWindow : public Gtk::Window
 {
    protected:
 	Gtk::Button m_BtnSave;
 	Gtk::Button m_BtnCancel;
+        Gtk::Label m_LblRecipe;
 	Gtk::Label m_LblPump1;
         Gtk::Label m_LblPump2;
         Gtk::Label m_LblPump3;
@@ -30,6 +32,7 @@ class NewRecipeWindow : public Gtk::Window
         Gtk::Label m_LblPump8;
         Gtk::Label m_LblPump9;
         Gtk::Label m_LblPump10;
+        Gtk::Entry m_EntryRecipe;
         Gtk::Entry m_EntryPump1;
         Gtk::Entry m_EntryPump2;
         Gtk::Entry m_EntryPump3;
@@ -54,6 +57,7 @@ class NewRecipeWindow : public Gtk::Window
         Gtk::Box m_HBox10;       
         Gtk::Box m_HBox11;        
         
+        CSVRow m_CSVRow;
         //signal handlers
 	void on_save_button_clicked();
 	void on_cancel_button_clicked();
@@ -67,4 +71,3 @@ public:
 
 
 #endif /* NEWRECIPEWINDOW_H */
-

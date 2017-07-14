@@ -24,6 +24,7 @@
       <itemPath>ArduinoWorker.cpp</itemPath>
       <itemPath>AsyncSerial.cpp</itemPath>
       <itemPath>BufferedAsyncSerial.cpp</itemPath>
+      <itemPath>CSVRow.cpp</itemPath>
       <itemPath>EditRecipeWindow.cpp</itemPath>
       <itemPath>FrmMain.cpp</itemPath>
       <itemPath>FrmMainApplication.cpp</itemPath>
@@ -93,6 +94,8 @@
       </item>
       <item path="BufferedAsyncSerial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="CSVRow.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="CSVRow.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="EditRecipeWindow.cpp" ex="false" tool="1" flavor2="0">
@@ -151,6 +154,8 @@
       <item path="BufferedAsyncSerial.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BufferedAsyncSerial.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CSVRow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CSVRow.h" ex="false" tool="3" flavor2="0">
       </item>
