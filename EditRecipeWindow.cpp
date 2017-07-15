@@ -53,7 +53,7 @@ EditRecipeWindow::EditRecipeWindow()
             m_Combo.append(recipes[i]);
         }
         m_Combo.set_active(1);
-        pump_values = m_CSVRow.get_values_vector(1);
+        m_pump_values = m_CSVRow.get_values_vector(1);
         m_EntryPump1.set_text("0.0");
         m_EntryPump2.set_text("0.0");
         m_EntryPump3.set_text("0.0");
@@ -117,8 +117,12 @@ EditRecipeWindow::~EditRecipeWindow()
 //signal handlers
 void EditRecipeWindow::on_save_button_clicked()
 {
-    
-    
+    Glib::ustring text = m_Combo.get_active_text();
+    int index = m_Combo.get_active_row_number();
+    m_pump_values = {m_EntryPump1.get_text(),m_EntryPump2.get_text(),m_EntryPump3.get_text(),
+    m_EntryPump4.get_text(),m_EntryPump5.get_text(),m_EntryPump6.get_text(),m_EntryPump7.get_text(),m_EntryPump8.get_text(),
+    m_EntryPump9.get_text(),m_EntryPump10.get_text()};
+    m_CSVRow.edit_recipe(m_pump_values,index);
     cout << "Save" << std::endl;
      
     
@@ -133,6 +137,20 @@ void EditRecipeWindow::on_cancel_button_clicked()
 void EditRecipeWindow::on_combo_changed()
 {
     Glib::ustring text = m_Combo.get_active_text();
+    int index = m_Combo.get_active_row_number();
+    m_pump_values = m_CSVRow.get_values_vector(index);
+    m_EntryPump1.set_text(m_pump_values[0]);
+    m_EntryPump2.set_text(m_pump_values[1]);
+    m_EntryPump3.set_text(m_pump_values[2]);
+    m_EntryPump4.set_text(m_pump_values[3]);
+    m_EntryPump5.set_text(m_pump_values[4]);
+    m_EntryPump6.set_text(m_pump_values[5]);
+    m_EntryPump7.set_text(m_pump_values[6]);
+    m_EntryPump8.set_text(m_pump_values[7]);
+    m_EntryPump9.set_text(m_pump_values[8]);
+    m_EntryPump10.set_text(m_pump_values[9]);
     if(!(text.empty()))
         std::cout << "Combo changed: " << text << std::endl;
+    
+    
 }

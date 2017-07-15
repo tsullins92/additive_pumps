@@ -56,6 +56,7 @@ class EditRecipeWindow : public Gtk::Window
         Gtk::Box m_HBox11;      
         Gtk::ComboBoxText m_Combo;
         
+        std::vector<std::string> m_pump_values;
         CSVRow m_CSVRow;
         //signal handlers
 	void on_save_button_clicked();

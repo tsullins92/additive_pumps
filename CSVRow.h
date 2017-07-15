@@ -32,6 +32,7 @@ class CSVRow
     void write_recipe(std::vector<std::string> recipe_info);
     void readNextRow(std::istream& str);  
     std::vector<std::string> get_values_vector(int recipes_index);
+    void edit_recipe(std::vector<std::string> recipe_info, int recipes_index);
     
     private:
     // std::map<std::string,std::vector<std::string> >   m_recipes_map;

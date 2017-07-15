@@ -33,7 +33,7 @@ std::vector<std::string> CSVRow::get_recipe_vector()
     return m_recipes_vector;
 }
 
-std::vector<std::string CSVRow::get_values_vector(int recipes_index)
+std::vector<std::string> CSVRow::get_values_vector(int recipes_index)
 {
     return m_values_vector[recipes_index];
 }
@@ -42,7 +42,6 @@ void CSVRow::readNextRow(std::istream& str)
 {
     std::string         line;
     std::getline(str, line);
-
     std::stringstream   lineStream(line);
     std::string         cell;
 
@@ -66,13 +65,33 @@ std::ifstream       file("recipes.csv");
 CSVRow              row;
     while(file >> row)
     {
+
         m_recipes_vector.push_back(row[0]);
-        vector<T>::const_iterator first = row.begin()+1;
-        vector<T>::const_iterator last = row.begin() + 10;
-        vector<T> newVec(first, last);
-        m_values_vector.push_back();
+        m_values_vector.push_back({row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10]});
     }
 }
+
+void CSVRow::edit_recipe(std::vector<std::string> recipe_info, int recipes_index)
+{
+    m_values_vector[recipes_index] = recipe_info;
+    std::ofstream               output_file;
+    output_file.open("recipes.csv");    //open file
+    for (int i=0;i<m_recipes_vector.size();++i)
+    {
+        output_file << m_recipes_vector[i];
+        for(int x=0;x<m_values_vector[i].size();++x)
+        {
+            if(!isalpha(m_values_vector[i][x][0]))                           //make sure that we are only writing numerical values to recipes.csv
+            {
+                output_file << "," << m_values_vector[i][x];
+            }
+        }
+        output_file << "\n";
+    }               
+}
+
+
+
 
 void CSVRow::write_recipe(std::vector<std::string> recipe_info)
 {
@@ -92,3 +111,4 @@ void CSVRow::write_recipe(std::vector<std::string> recipe_info)
         }
     }               
 }
+
