@@ -1111,7 +1111,8 @@ build/Debug/GNU-Linux/ArduinoWorker.o: ArduinoWorker.cpp ArduinoWorker.h \
  /usr/include/gtkmm-3.0/gtkmm/treestore.h \
  /usr/include/gtkmm-3.0/gtkmm/uimanager.h \
  /usr/include/gtkmm-3.0/gtkmm/viewport.h \
- /usr/include/gtkmm-3.0/gtkmm/volumebutton.h FrmMain.h ScaleWorker.h
+ /usr/include/gtkmm-3.0/gtkmm/volumebutton.h FrmMain.h ScaleWorker.h \
+ CSVRow.h
 
 ArduinoWorker.h:
 
@@ -3440,3 +3441,5 @@ AsyncSerial.h:
 FrmMain.h:
 
 ScaleWorker.h:
+
+CSVRow.h:

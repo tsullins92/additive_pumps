@@ -41,7 +41,6 @@ void ArduinoWorker::do_work(FrmMain* caller)
     struct termios tio;
     struct termios stdio;
     int tty_fd;
-    unsigned char c='D';
     fd_set rdset;
 
     memset(&stdio,0,sizeof(stdio));
@@ -76,7 +75,7 @@ void ArduinoWorker::do_work(FrmMain* caller)
     {    
         
         //sleep to give time for serial to buffer and main thread to perform set_data()
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
                
         {
             //lock the rest of the activity so that the main thread cannot interfere
@@ -84,14 +83,14 @@ void ArduinoWorker::do_work(FrmMain* caller)
             
             if (m_shall_stop)
             {
-                c = {'l'};
+                char c = 'l';
                 write(tty_fd,&c,1);
                 break;           
             }
             
-            c = {m_pump_command[0]};
-            write(tty_fd,&c,1);       
-            cout<<"m_pump_command = "<<m_pump_command<<endl;  
+            const char *mycharp = m_pump_command.c_str();
+            write(tty_fd,mycharp,2);       
+            //cout<<"m_pump_command = "<<m_pump_command<<"\n";  
         }
     }
     close(tty_fd);

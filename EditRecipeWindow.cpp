@@ -54,16 +54,16 @@ EditRecipeWindow::EditRecipeWindow()
         }
         m_Combo.set_active(1);
         m_pump_values = m_CSVRow.get_values_vector(1);
-        m_EntryPump1.set_text("0.0");
-        m_EntryPump2.set_text("0.0");
-        m_EntryPump3.set_text("0.0");
-        m_EntryPump4.set_text("0.0");
-        m_EntryPump5.set_text("0.0");
-        m_EntryPump6.set_text("0.0");
-        m_EntryPump7.set_text("0.0");
-        m_EntryPump8.set_text("0.0");
-        m_EntryPump9.set_text("0.0");
-        m_EntryPump10.set_text("0.0");
+        m_EntryPump1.set_text(m_pump_values[0]);
+        m_EntryPump2.set_text(m_pump_values[1]);
+        m_EntryPump3.set_text(m_pump_values[2]);
+        m_EntryPump4.set_text(m_pump_values[3]);
+        m_EntryPump5.set_text(m_pump_values[4]);
+        m_EntryPump6.set_text(m_pump_values[5]);
+        m_EntryPump7.set_text(m_pump_values[6]);
+        m_EntryPump8.set_text(m_pump_values[7]);
+        m_EntryPump9.set_text(m_pump_values[8]);
+        m_EntryPump10.set_text(m_pump_values[9]);
         m_HBox0.pack_start(m_LblRecipe, Gtk::PACK_EXPAND_PADDING); 
         m_HBox0.pack_start(m_Combo, Gtk::PACK_EXPAND_PADDING); 
         m_VBox1.pack_start(m_HBox0, Gtk::PACK_EXPAND_PADDING);    

@@ -18,7 +18,7 @@
 #include <gtkmm.h>
 #include <thread>
 #include <mutex>
-#include<string>
+#include <string>
 
 class FrmMain;
 
@@ -31,7 +31,7 @@ public:
   void do_work(FrmMain* caller);
   void get_data(Glib::ustring* fraction_done) const;
   void get_pump_data(std::string* pump_command) const;
-  void set_target_volume(double* target_volume);
+  void set_target_volume(std::vector<double>* target_volumes);
   void stop_work();
   bool has_stopped() const;
   void control_ard();
@@ -45,7 +45,9 @@ private:
   bool m_shall_stop;
   bool m_has_stopped;
   double m_fraction_done;
-  double m_target_volume;
+  int m_stable_reading_counter;
+  int m_current_pump;
+  std::vector<double> m_target_volumes;
   std::string m_pump_command;
   std::string m_scale_reading;
   

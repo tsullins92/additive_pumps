@@ -15,7 +15,6 @@ ScaleWorker::ScaleWorker() :
   m_shall_stop(false),
   m_has_stopped(false), 
   m_scale_reading("0.0"),
-  m_target_volume(0.0),
   m_pump_command("")      
 {
 }
@@ -39,16 +38,21 @@ void ScaleWorker::get_pump_data(string* pump_command) const
     *pump_command = m_pump_command;
 }
 
-void ScaleWorker::set_target_volume(double* target_volume)
+void ScaleWorker::set_target_volume(std::vector<double>* target_volumes)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
 
-    if (target_volume)
-        m_target_volume = *target_volume;
+    if (target_volumes)
+    {
+        m_target_volumes = *target_volumes;
+    }
+    
 }
 
 void ScaleWorker::do_work(FrmMain* caller)
-{       
+{   
+    m_current_pump = 0;
+    m_stable_reading_counter = 0;
     string past_reading = "0.0";
     {
         std::lock_guard<std::mutex> lock(m_Mutex);
@@ -65,7 +69,7 @@ void ScaleWorker::do_work(FrmMain* caller)
             //lock the rest of the activity so that the main thread cannot interfere
             std::lock_guard<std::mutex> lock(m_Mutex);
             
-            if (m_shall_stop)
+            if (m_shall_stop||(m_current_pump>9))
             {
                 break;
             }
@@ -80,20 +84,20 @@ void ScaleWorker::do_work(FrmMain* caller)
             
             try
             {            
-                control_active_pumps(past_reading,m_scale_reading,m_target_volume); 
+                control_active_pumps(past_reading,m_scale_reading,m_target_volumes[m_current_pump]); 
             } 
             catch(std::invalid_argument& e)
             {
                 cout<<"Error: "<<e.what()<<endl;
             }
-            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
             
             past_reading = m_scale_reading;    
             }
         
         
         caller->notify();   
-        //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
     }
     {
     std::lock_guard<std::mutex> lock(m_Mutex);
@@ -110,11 +114,12 @@ void ScaleWorker::control_active_pumps(string past_reading,string& scale_reading
     stringstream ssin {scale_reading};
     stringstream ssout {""};
     double value;
+    double past_value;
     bool valid_reading = false;
     
     for (char ch;ssin.get(ch);)
     { 
-        if(isdigit(ch))
+        if(isdigit(ch)||ch=='-')
         {
             ssout<<ch;
         }
@@ -128,18 +133,37 @@ void ScaleWorker::control_active_pumps(string past_reading,string& scale_reading
             break;
         }    
     }
+    past_value = stod(past_reading);
     if(valid_reading)
     {
-        value = stod(ssout.str());
-        if (value<target_volume)
-            m_pump_command = "h";
-        else
-            m_pump_command = "l";
-
+        if(abs(past_value-stod(ssout.str()))<20.0)
+        {
+            value = stod(ssout.str());
+            if (value<target_volume)
+            {
+                if((value>(target_volume*0.975)))
+                {
+                    m_pump_command = "close"+m_current_pump;  
+                }
+                else
+                {
+                    m_pump_command = std::to_string(m_current_pump);
+                }    
+            }    
+            else
+            {
+                m_pump_command = "l";
+                ++m_stable_reading_counter;
+                if (m_stable_reading_counter>3)  
+                    {
+                        m_stable_reading_counter = 0;
+                        ++m_current_pump;
+                    }
+            } 
+        }
         scale_reading = ssout.str();
-        cout << "ssout = " << ssout.str() << "\n";
-        cout <<"value = " << value << "\n";
-        cout << "target_volume = " << target_volume << "\n";
+        cout << "m_current_pump = " << m_current_pump << "\n";
+        cout<<"m_pump_command = "<<m_pump_command<<"\n";  
         return;
     }
     else 

@@ -23,8 +23,10 @@ FrmMain::FrmMain()
       : //Initialize gui elements
         btnStart("Start"),          //btnStart displays "Start"   
         btnCancel("Cancel"),        //btnCancel displays "Cancel"
-        lblRunStatus("Pumps Inactive"),        //labelSentStatus displays Satus of pumps
-        lblMass("Not Reading"),     //lblMass displays mass from scale        
+        lblRunStatus1("Pump Status: "),
+        lblRunStatus2("Pumps Inactive"),        //labelSentStatus displays Satus of pumps
+        lblMass1("Scale Reading: "),  
+        lblMass2("Not Reading"),     //lblMass displays mass from scale        
         vBox1(Gtk::ORIENTATION_VERTICAL),       
         hBox1(Gtk::ORIENTATION_HORIZONTAL),
         hBox2(Gtk::ORIENTATION_HORIZONTAL),
@@ -34,15 +36,28 @@ FrmMain::FrmMain()
         m_ScaleWorker(),
         m_ScaleWorkerThread(nullptr),   
         m_ArduinoWorker(),
-        m_ArduinoWorkerThread(nullptr)  
+        m_ArduinoWorkerThread(nullptr),  
+        m_pump_sequence_vector(10,0.0)
 {       
         //more initializing and packing elements into window
         set_title("Additives");
-        set_size_request(350,300);
+        set_size_request(350,250);
         set_border_width(0);
-        hBox1.pack_start(lblMass, Gtk::PACK_EXPAND_PADDING);    //pack mass reading into hBox1
+        vector<string> recipes;
+        vector<string> pump_values;
+        m_CSVRow.getRecipes();
+        recipes = m_CSVRow.get_recipe_vector();
+        for (int i=0;i<recipes.size();++i)
+        {
+            m_Combo.append(recipes[i]);
+        }
+        m_Combo.set_active(1);
+        m_pump_values = m_CSVRow.get_values_vector(1);
+        hBox1.pack_start(lblMass1, Gtk::PACK_EXPAND_PADDING);
+        hBox1.pack_start(lblMass2, Gtk::PACK_EXPAND_PADDING);    //pack mass reading into hBox1
         vBox1.pack_start(hBox1, Gtk::PACK_EXPAND_PADDING);      //pack hBox1    
-        hBox2.pack_start(lblRunStatus, Gtk::PACK_EXPAND_PADDING); //pack run status into hBox2
+        hBox2.pack_start(lblRunStatus1, Gtk::PACK_EXPAND_PADDING);
+        hBox2.pack_start(lblRunStatus2, Gtk::PACK_EXPAND_PADDING); //pack run status into hBox2
         vBox1.pack_start(hBox2, Gtk::PACK_EXPAND_PADDING);      //pack hBox2
         hBox3.pack_start(btnStart, Gtk::PACK_EXPAND_PADDING);      //pack OK button into hBox3
         hBox3.pack_start(btnCancel, Gtk::PACK_EXPAND_PADDING);      //pack cancel button into hBox3
@@ -51,6 +66,7 @@ FrmMain::FrmMain()
         entryVolume.set_text("Enter Volume Here");
         entryVolume.select_region(0, entryVolume.get_text_length());
         hBox4.pack_start(entryVolume, Gtk::PACK_EXPAND_PADDING);
+        hBox4.pack_start(m_Combo, Gtk::PACK_EXPAND_PADDING);
         vBox1.pack_start(hBox4, Gtk::PACK_EXPAND_PADDING);      //pack hbox4
         add(vBox1);
         
@@ -78,13 +94,17 @@ void FrmMain::on_start_button_clicked(){
     else
     {   
         try
-        {           
+        {     
             double target_volume = stod(entryVolume.get_text());
-            m_ScaleWorker.set_target_volume(&target_volume);
+            for(int i=0;i<m_pump_values.size();++i)
+            {
+                m_pump_sequence_vector[i] = (stod(m_pump_values[i])) * target_volume;
+            }
+            m_ScaleWorker.set_target_volume(&m_pump_sequence_vector);
             start_scale_timeout();
             start_arduino_timeout();
             update_start_stop_buttons();
-            lblRunStatus.set_text("Pumps Running");
+            lblRunStatus2.set_text("Pumps Running");
         }
         catch(boost::system::system_error& e)
         {
@@ -120,6 +140,13 @@ void FrmMain::on_cancel_button_clicked(){
   }
 }
 
+void FrmMain::on_combo_changed()
+{
+    Glib::ustring text = m_Combo.get_active_text();
+    int index = m_Combo.get_active_row_number();
+    m_pump_values = m_CSVRow.get_values_vector(index);
+}
+
 void FrmMain::update_start_stop_buttons()
 {
   const bool thread_is_running = m_ScaleWorkerThread != nullptr;
@@ -132,7 +159,7 @@ void FrmMain::update_widgets()
 {
   Glib::ustring scale_reading;
   m_ScaleWorker.get_data(&scale_reading);
-  lblMass.set_text(scale_reading); 
+  lblMass2.set_text(scale_reading); 
 }
 
 void FrmMain::update_arduino()
@@ -186,10 +213,18 @@ void FrmMain::on_notification_from_scale_worker_thread()
            m_ScaleWorkerThread->join();
         delete m_ScaleWorkerThread;
         m_ScaleWorkerThread = nullptr;
-        lblMass.set_text("Not Reading");
-        lblRunStatus.set_text("Pumps Inactive");
+        
+        if (!m_ArduinoWorkerThread)
+        {
+          std::cout << "Can't stop a worker thread. None is running." << std::endl;
+        }
+        else
+        {
+         on_cancel_button_clicked();
+        }
+
         update_start_stop_buttons();
-  }
+    }
     else
     {
         update_widgets();
@@ -201,5 +236,8 @@ void FrmMain::on_notification_from_scale_worker_thread()
            m_ArduinoWorkerThread->join();
         delete m_ArduinoWorkerThread;
         m_ArduinoWorkerThread = nullptr;
+        update_start_stop_buttons();
+        lblMass2.set_text("Not Reading");
+        lblRunStatus2.set_text("Pumps Inactive");
     }
 }
