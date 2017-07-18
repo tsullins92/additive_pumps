@@ -134,33 +134,31 @@ void ScaleWorker::control_active_pumps(string past_reading,string& scale_reading
         }    
     }
     past_value = stod(past_reading);
-    if(valid_reading)
+    if(valid_reading&&abs(past_value-stod(ssout.str()))<20.0)
     {
-        if(abs(past_value-stod(ssout.str()))<20.0)
+        value = stod(ssout.str());
+        if (value<target_volume)
         {
-            value = stod(ssout.str());
-            if (value<target_volume)
+            if((value>(target_volume-2.0)))
             {
-                if((value>(target_volume*0.975)))
-                {
-                    m_pump_command = "close"+m_current_pump;  
-                }
-                else
-                {
-                    m_pump_command = std::to_string(m_current_pump);
-                }    
-            }    
+                m_pump_command = ("m"+std::to_string(m_current_pump));  
+            }
             else
             {
-                m_pump_command = "l";
-                ++m_stable_reading_counter;
-                if (m_stable_reading_counter>3)  
-                    {
-                        m_stable_reading_counter = 0;
-                        ++m_current_pump;
-                    }
-            } 
-        }
+                m_pump_command = std::to_string(m_current_pump)+"h";
+            }    
+        }    
+        else
+        {
+            m_pump_command = "l";
+            ++m_stable_reading_counter;
+            if (m_stable_reading_counter>3)  
+                {
+                    m_stable_reading_counter = 0;
+                    ++m_current_pump;
+                    m_target_volumes[m_current_pump] += value;
+                }
+        } 
         scale_reading = ssout.str();
         cout << "m_current_pump = " << m_current_pump << "\n";
         cout<<"m_pump_command = "<<m_pump_command<<"\n";  
