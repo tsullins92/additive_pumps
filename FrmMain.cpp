@@ -85,11 +85,15 @@ FrmMain::~FrmMain()
 {
     
 }
-//signal handlers
+//calls on_cancel_button_clicked() if either ScaleWorker or ArduinoWorker threads are running.
+//uses volume of batch from entryVolume and mL/L amount from m_Combo to calculate vector of volumes
+//to pass to ScaleWorker thread. Calls both the ScaleWorker and ArduinoWorker threads. Sets 
+//lblRunStatus2 label to "Pumps Running".
 void FrmMain::on_start_button_clicked(){
     if (m_ScaleWorkerThread||m_ArduinoWorkerThread)
     {
         std::cout << "Can't start a worker thread while another one is running." << std::endl;
+        on_cancel_button_clicked();
      }
     else
     {   
@@ -117,6 +121,7 @@ void FrmMain::on_start_button_clicked(){
     }
 }
 
+//Calls stop_work() if there are threads to stop
 void FrmMain::on_cancel_button_clicked(){
     if (!m_ScaleWorkerThread)
   {
@@ -126,7 +131,6 @@ void FrmMain::on_cancel_button_clicked(){
   {
    // Order the worker thread to stop.
     m_ScaleWorker.stop_work();    
-    btnCancel.set_sensitive(false);
   }
     if (!m_ArduinoWorkerThread)
   {
@@ -136,10 +140,10 @@ void FrmMain::on_cancel_button_clicked(){
   {
    // Order the worker thread to stop.
     m_ArduinoWorker.stop_work();    
-    btnCancel.set_sensitive(false);
   }
 }
 
+//gets pump sequence vector when the combo box changes values
 void FrmMain::on_combo_changed()
 {
     Glib::ustring text = m_Combo.get_active_text();
@@ -147,6 +151,7 @@ void FrmMain::on_combo_changed()
     m_pump_values = m_CSVRow.get_values_vector(index);
 }
 
+//changes sensitivity of buttons based on whether the ScaleWorker thread is running.
 void FrmMain::update_start_stop_buttons()
 {
   const bool thread_is_running = m_ScaleWorkerThread != nullptr;

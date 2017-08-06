@@ -144,6 +144,5 @@ void NewRecipeWindow::on_save_button_clicked()
 
 void NewRecipeWindow::on_cancel_button_clicked()
 {
-    cout << "Cancel" << std::endl;
-  
+    hide();    
 }

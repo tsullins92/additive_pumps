@@ -124,17 +124,17 @@ void FrmMainApplication::on_startup()
     std::cerr << "Building menus failed: " << ex.what();
   }
 
-  //Get the menubar and the app menu, and add them to the application:
+  //Get the menubar and NOT the app menu, and add them to the application:
   auto object = m_refBuilder->get_object("menubar");
   auto gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
-  object = m_refBuilder->get_object("appmenu");
-  auto appMenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
-  if (!(gmenu && appMenu)) {
+  //object = m_refBuilder->get_object("appmenu");
+  //auto appMenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
+  if (!(gmenu)) {
     g_warning("GMenu or AppMenu not found");
   }
   else
   {
-    set_app_menu(appMenu);
+    //set_app_menu(appMenu);
     set_menubar(gmenu);
   }
 }

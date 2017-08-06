@@ -20,8 +20,8 @@ ScaleWorker::ScaleWorker() :
 }
 
 // Accesses to these data are synchronized by a mutex.
-// Some microseconds can be saved by getting all data at once, instead of having
-// separate get_fraction_done() and get_message() methods.
+
+//called by main thread to get mass reading from scale
 void ScaleWorker::get_data(Glib::ustring* scale_reading) const
 {
   std::lock_guard<std::mutex> lock(m_Mutex);
@@ -30,6 +30,8 @@ void ScaleWorker::get_data(Glib::ustring* scale_reading) const
     *scale_reading = m_scale_reading;
 }
 
+
+//called by main thread to get the command to send to the arduino thread
 void ScaleWorker::get_pump_data(string* pump_command) const
 {
   std::lock_guard<std::mutex> lock(m_Mutex);
@@ -38,6 +40,8 @@ void ScaleWorker::get_pump_data(string* pump_command) const
     *pump_command = m_pump_command;
 }
 
+
+//called by main thread to set the target volumes of each of the pump sequences
 void ScaleWorker::set_target_volume(std::vector<double>* target_volumes)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
@@ -49,6 +53,8 @@ void ScaleWorker::set_target_volume(std::vector<double>* target_volumes)
     
 }
 
+//main loop of this thread. reads data in from scale, passes that data to 
+//control_active_pumps(), and then calls notify. 
 void ScaleWorker::do_work(FrmMain* caller)
 {   
     m_current_pump = 0;
@@ -108,7 +114,8 @@ void ScaleWorker::do_work(FrmMain* caller)
 }
 
 
-
+//Gets scale reading from do_work() loop and decides whether the scale reading is 
+//valid and which pump command to send.
 void ScaleWorker::control_active_pumps(string past_reading,string& scale_reading, double target_volume)
 {
     stringstream ssin {scale_reading};
@@ -171,12 +178,15 @@ void ScaleWorker::control_active_pumps(string past_reading,string& scale_reading
     }
 }
 
+//called my main thread. do_work() loop will call break when m_shall_stop is true
 void ScaleWorker::stop_work()
 {
   std::lock_guard<std::mutex> lock(m_Mutex);
   m_shall_stop = true;
 }
 
+//called  by main thread to check on status of the loop. main will join the threads and 
+//delete the ScaleWorker object if this function returns a true value
 bool ScaleWorker::has_stopped() const
 {
   std::lock_guard<std::mutex> lock(m_Mutex);
