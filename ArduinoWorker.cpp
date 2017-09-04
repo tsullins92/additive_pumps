@@ -83,8 +83,8 @@ void ArduinoWorker::do_work(FrmMain* caller)
             
             if (m_shall_stop)
             {
-                char c = 'l';
-                write(tty_fd,&c,1);
+                const char* c = "ll";
+                write(tty_fd,c,2);
                 break;           
             }
             
