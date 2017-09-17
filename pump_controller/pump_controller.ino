@@ -24,11 +24,16 @@ if (Serial.available() >= 2)
   }         
 }
 
+
 void read_msg()
 { 
-    msg[0] = Serial.read();
-    msg[1] =  Serial.read();       
+    while(Serial.available())
+    {
+      msg[0] = Serial.read();
+      msg[1] =  Serial.read();   
+    }    
 }
+
 
 void sort_msg()
 {
@@ -45,6 +50,7 @@ void sort_msg()
   }
 }
 
+
 void command_pumps(){
    Serial.print("msg[0]: ");
    Serial.println(msg[0]);
@@ -55,6 +61,61 @@ void command_pumps(){
     digitalWrite(PUMP5, LOW);  
     digitalWrite(PUMP6, LOW);       
   } 
+  else if (msg[1] == 'm')
+  {
+     if(msg[0]=='0'){
+      digitalWrite(PUMP5, HIGH);
+      delay(50);
+      digitalWrite(PUMP5, LOW);
+      delay(800);
+     }           
+    else if (msg[0]=='1'){
+      digitalWrite(PUMP6, HIGH);
+      delay(50);
+      digitalWrite(PUMP6, LOW);
+      delay(800);
+     }
+    else if (msg[0]=='2'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+    else if (msg[0]=='3'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+    else if (msg[0]=='4'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+    else if (msg[0]=='5'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+    else if (msg[0]=='6'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+    else if (msg[0]=='7'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+    else if (msg[0]=='8'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+    else if (msg[0]=='9'){
+      digitalWrite(PUMP5, HIGH); 
+      delay(20);
+      digitalWrite(PUMP5, LOW);
+     }
+  }
   else if (msg[1] == 'h')
   {
     if(msg[0]=='0')  
