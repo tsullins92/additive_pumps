@@ -1,13 +1,13 @@
-#define PUMP1 1    //pin for turning transistor on/offz
-#define PUMP2 2    //pin for turning transistor on/offz
-#define PUMP3 3    //pin for turning transistor on/offz
-#define PUMP4 4    //pin for turning transistor on/offz
-#define PUMP5 5    //pin for turning transistor on/offz
-#define PUMP6 6    //pin for turning transistor on/offz
-#define PUMP7 7    //pin for turning transistor on/offz
-#define PUMP8 8    //pin for turning transistor on/offz
-#define PUMP9 9    //pin for turning transistor on/offz
-#define PUMP10 10    //pin for turning transistor on/offz
+#define PUMP1 2    //pin for turning transistor on/offz
+#define PUMP2 3    //pin for turning transistor on/offz
+#define PUMP3 4    //pin for turning transistor on/offz
+#define PUMP4 5    //pin for turning transistor on/offz
+#define PUMP5 6    //pin for turning transistor on/offz
+#define PUMP6 7    //pin for turning transistor on/offz
+#define PUMP7 8    //pin for turning transistor on/offz
+#define PUMP8 9    //pin for turning transistor on/offz
+#define PUMP9 10    //pin for turning transistor on/offz
+#define PUMP10 11    //pin for turning transistor on/offz
 const byte numChars = 2;
 char msg[numChars];
 
@@ -103,41 +103,49 @@ void command_pumps(){
       digitalWrite(PUMP3, HIGH); 
       delay(20);
       digitalWrite(PUMP3, LOW);
+      delay(800);
      }
     else if (msg[0]=='3'){
       digitalWrite(PUMP4, HIGH); 
       delay(20);
       digitalWrite(PUMP4, LOW);
+      delay(800);
      }
     else if (msg[0]=='4'){
       digitalWrite(PUMP5, HIGH); 
       delay(20);
       digitalWrite(PUMP5, LOW);
+      delay(800);
      }
     else if (msg[0]=='5'){
       digitalWrite(PUMP6, HIGH); 
       delay(20);
       digitalWrite(PUMP6, LOW);
+      delay(800);
      }
     else if (msg[0]=='6'){
       digitalWrite(PUMP7, HIGH); 
       delay(20);
       digitalWrite(PUMP7, LOW);
+      delay(800);
      }
     else if (msg[0]=='7'){
       digitalWrite(PUMP8, HIGH); 
       delay(20);
       digitalWrite(PUMP8, LOW);
+      delay(800);
      }
     else if (msg[0]=='8'){
       digitalWrite(PUMP9, HIGH); 
       delay(20);
       digitalWrite(PUMP9, LOW);
+      delay(800);
      }
     else if (msg[0]=='9'){
       digitalWrite(PUMP10, HIGH); 
       delay(20);
       digitalWrite(PUMP10, LOW);
+      delay(800);
      }
   }
   else if (msg[1] == 'h')

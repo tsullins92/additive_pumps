@@ -51,7 +51,7 @@ FrmMain::FrmMain()
         {
             m_Combo.append(recipes[i]);
         }
-        m_Combo.set_active(1);
+        m_Combo.set_active(0);
         m_pump_values = m_CSVRow.get_values_vector(1);
         hBox1.pack_start(lblMass1, Gtk::PACK_EXPAND_PADDING);
         hBox1.pack_start(lblMass2, Gtk::PACK_EXPAND_PADDING);    //pack mass reading into hBox1
@@ -73,7 +73,8 @@ FrmMain::FrmMain()
         //connect signals to handlers
         btnStart.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_start_button_clicked));
         btnCancel.signal_clicked().connect(sigc::mem_fun(*this, &FrmMain::on_cancel_button_clicked));
-        
+        m_Combo.signal_changed().connect(sigc::mem_fun(*this, &FrmMain::on_combo_changed));
+
         // Connect the handler to the dispatcher.
         m_Dispatcher.connect(sigc::mem_fun(*this, &FrmMain::on_notification_from_scale_worker_thread));
         update_start_stop_buttons();
@@ -146,6 +147,9 @@ void FrmMain::on_cancel_button_clicked(){
 //gets pump sequence vector when the combo box changes values
 void FrmMain::on_combo_changed()
 {
+    
+    
+    
     Glib::ustring text = m_Combo.get_active_text();
     int index = m_Combo.get_active_row_number();
     m_pump_values = m_CSVRow.get_values_vector(index);
